@@ -29,3 +29,7 @@ replay_pid*
 /target
 
 .vscode/**
+
+.idea/**
+
+log/**

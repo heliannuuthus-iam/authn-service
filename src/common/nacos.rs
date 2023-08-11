@@ -16,7 +16,8 @@ lazy_static::lazy_static! {
     ClientProps::new()
         .server_addr(env_var::<String>("NACOS_SERVER"))
         .namespace(env_var::<String>("NACOS_NAMESPACE"))
-        .app_name(env_var::<String>("CARGO_PKG_NAME"))).build().unwrap());
+        .app_name(env_var::<String>("CARGO_PKG_NAME")))
+        .build().unwrap());
 }
 
 pub struct InstanceChangeListener;
@@ -27,22 +28,26 @@ impl NamingEventListener for InstanceChangeListener {
     }
 }
 
-pub fn init_nacos() {
-    let _subscribe_ret = NACOS_CLIENT.subscribe(
-        env!("CARGO_PKG_NAME").to_string(),
-        Some(constants::DEFAULT_GROUP.to_string()),
-        Vec::default(),
-        Arc::new(InstanceChangeListener),
-    );
+pub async fn init_nacos() {
+    let _subscribe_ret = NACOS_CLIENT
+        .subscribe(
+            env_var::<String>("CARGO_PKG_NAME"),
+            Some(constants::DEFAULT_GROUP.to_string()),
+            Vec::default(),
+            Arc::new(InstanceChangeListener),
+        )
+        .await;
 
     // example naming register instances
-    let _register_instance_ret = NACOS_CLIENT.batch_register_instance(
-        env!("CARGO_PKG_NAME").to_string(),
-        Some(constants::DEFAULT_GROUP.to_string()),
-        vec![ServiceInstance {
-            ip: env_var("SERVICE_HOST"),
-            port: env_var("SERVICE_PORT"),
-            ..Default::default()
-        }],
-    );
+    let _register_instance_ret = NACOS_CLIENT
+        .batch_register_instance(
+            env!("CARGO_PKG_NAME").to_string(),
+            Some(constants::DEFAULT_GROUP.to_string()),
+            vec![ServiceInstance {
+                ip: env_var("SERVER_HOST"),
+                port: env_var("SERVER_PORT"),
+                ..Default::default()
+            }],
+        )
+        .await;
 }

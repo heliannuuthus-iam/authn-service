@@ -1,7 +1,8 @@
-use crate::common::config::env_var;
 use chrono::Duration;
 use lazy_static::lazy_static;
-use sqlx::{mysql::MySqlPoolOptions, Pool, MySql};
+use sqlx::{mysql::MySqlPoolOptions, MySql, Pool};
+
+use crate::common::config::env_var;
 
 lazy_static! {
     pub static ref CONN: Pool<MySql> = {
