@@ -1,41 +1,11 @@
 use actix_web::{
-    body,
     http::{header::ContentType, StatusCode},
-    HttpResponse, Responder, ResponseError,
+    HttpResponse, ResponseError,
 };
 use redis::RedisError;
 use thiserror::Error;
 
 pub type Result<T> = std::result::Result<T, ServiceError>;
-
-pub struct Resp<T> {
-    pub body: T,
-    pub code: StatusCode,
-}
-
-impl<T> Resp<T> {
-    fn new(body: T, code: StatusCode) -> Self {
-        Self { body, code }
-    }
-    pub fn success(body: T) -> Self {
-        Self::new(body, StatusCode::OK)
-    }
-}
-
-impl<T> Responder for Resp<T>
-where
-    T: serde::ser::Serialize,
-{
-    type Body = body::BoxBody;
-
-    fn respond_to(self, _req: &actix_web::HttpRequest) -> HttpResponse<Self::Body> {
-        HttpResponse::build(self.code)
-            .insert_header(ContentType::json())
-            .body(body::BoxBody::new(
-                serde_json::to_string(&self.body).unwrap(),
-            ))
-    }
-}
 
 #[derive(Debug, Error)]
 pub enum ConfigError {

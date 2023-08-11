@@ -2,8 +2,9 @@ use std::fmt::{Debug, Formatter};
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, ToSchema)]
 pub struct SrpPassword {
     pub id: i64,
     pub identifier: String,

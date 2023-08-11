@@ -1,12 +1,13 @@
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 use crate::{
     common::enums::IdpType,
     pojo::po::user::{User, UserAssociation},
 };
 
-#[derive(Serialize, Deserialize, Clone, Builder)]
+#[derive(Serialize, Deserialize, Clone, Builder, ToSchema)]
 pub struct UserProfileDTO {
     pub openid: String,
     pub email: String,
@@ -28,7 +29,7 @@ impl From<User> for UserProfileDTO {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, ToSchema)]
 pub struct UserAssociationDTO {
     #[serde(rename = "idp_openid")]
     pub idp_openid: String,
