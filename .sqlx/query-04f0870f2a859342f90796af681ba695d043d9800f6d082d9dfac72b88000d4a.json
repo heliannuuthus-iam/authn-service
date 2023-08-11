@@ -1,6 +1,6 @@
 {
   "db_name": "MySQL",
-  "query": "SELECT * FROM t_user_association WHERE openid = ?",
+  "query": "SELECT * FROM t_client_config WHERE client_id = ?",
   "describe": {
     "columns": [
       {
@@ -15,36 +15,56 @@
       },
       {
         "ordinal": 1,
-        "name": "openid",
+        "name": "client_id",
         "type_info": {
           "type": "VarString",
           "flags": "NOT_NULL | UNIQUE_KEY | NO_DEFAULT_VALUE",
           "char_set": 224,
-          "max_size": 88
+          "max_size": 128
         }
       },
       {
         "ordinal": 2,
-        "name": "idp_openid",
+        "name": "name",
         "type_info": {
           "type": "VarString",
           "flags": "NOT_NULL | NO_DEFAULT_VALUE",
           "char_set": 224,
-          "max_size": 1020
+          "max_size": 512
         }
       },
       {
         "ordinal": 3,
-        "name": "idp_type",
+        "name": "logo",
         "type_info": {
-          "type": "VarString",
-          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "type": "Blob",
+          "flags": "NOT_NULL | BLOB | NO_DEFAULT_VALUE",
           "char_set": 224,
-          "max_size": 64
+          "max_size": 262140
         }
       },
       {
         "ordinal": 4,
+        "name": "description",
+        "type_info": {
+          "type": "Blob",
+          "flags": "NOT_NULL | BLOB | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 262140
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "redirect_url",
+        "type_info": {
+          "type": "Blob",
+          "flags": "BLOB",
+          "char_set": 224,
+          "max_size": 262140
+        }
+      },
+      {
+        "ordinal": 6,
         "name": "updated_at",
         "type_info": {
           "type": "Timestamp",
@@ -54,7 +74,7 @@
         }
       },
       {
-        "ordinal": 5,
+        "ordinal": 7,
         "name": "created_at",
         "type_info": {
           "type": "Timestamp",
@@ -73,8 +93,10 @@
       false,
       false,
       false,
+      true,
+      false,
       false
     ]
   },
-  "hash": "cfb32df02d9cce3ebcb3579ceb673fe103bd1f29a77d43003da694f906ccc406"
+  "hash": "04f0870f2a859342f90796af681ba695d043d9800f6d082d9dfac72b88000d4a"
 }
