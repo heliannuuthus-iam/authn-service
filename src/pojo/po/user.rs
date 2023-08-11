@@ -25,8 +25,8 @@ pub struct User {
     #[serde(rename = "email_verified")]
     pub email_verified: bool,
 
-    #[serde(rename = "registerd_at")]
-    pub registerd_at: DateTime<Utc>,
+    #[serde(rename = "registered_at")]
+    pub registered_at: DateTime<Utc>,
 
     #[serde(rename = "updated_at")]
     pub updated_at: DateTime<Utc>,

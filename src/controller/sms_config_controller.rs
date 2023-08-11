@@ -10,8 +10,8 @@ use crate::{
 pub async fn get_sms_config(id: Path<i64>) -> Result<Resp<SmsConfig>> {
     select_sms_config(*id)
         .await
-        .and_then(|smsconfig| {
-            smsconfig.ok_or(ServiceError::NotFount(String::from("sms_config not found")))
+        .and_then(|sms_config| {
+            sms_config.ok_or(ServiceError::NotFount(String::from("sms_config not found")))
         })
         .map(Resp::success)
 }

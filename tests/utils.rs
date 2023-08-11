@@ -20,6 +20,10 @@ mod utils_test {
     #[test]
     fn test_desensitize_full_name() {
         assert_eq!(utils::desensitize_text("我的"), "我*");
+    }
+
+    #[test]
+    fn test_desensitize_full_name_grater_than_2() {
         assert_eq!(utils::desensitize_text("我们的"), "我*的");
     }
 }
