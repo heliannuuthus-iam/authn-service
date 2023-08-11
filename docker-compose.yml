@@ -1,0 +1,70 @@
+version: "3.8"
+services:
+  mysql:
+    build:
+      context: .
+      dockerfile: ./Dockerfile_mysql8
+    image: heliannuuthus/mysql:8.0
+    platform: linux/arm64/v8
+    restart: always
+    container_name: mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=forum
+      - MYSQL_PASSWORD=forum
+      - MYSQL_DATABASE=nacos_config
+    command: |
+      --collation-server=utf8mb4_general_ci
+      --character-set-server=utf8mb4
+    ports:
+      - "13306:3306"
+    volumes:
+      - db:/var/lib/mysql
+
+  cache:
+    image: redis:7.2-rc3
+    restart: always
+    ports:
+      - "19736:6379"
+    volumes:
+      - cache:/data
+
+  nacos:
+    image: nacos/nacos-server:v2.2.3
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "18848:8848"
+      - "19848:9848"
+    environment:
+      - PREFER_HOST_MODE=hostname
+      - MODE=standalone
+      - SPRING_DATASOURCE_PLATFORM=mysql
+      - MYSQL_SERVICE_HOST=mysql
+      - MYSQL_SERVICE_PORT=3306
+      - MYSQL_SERVICE_USER=forum
+      - MYSQL_SERVICE_PASSWORD=forum
+      - MYSQL_SERVICE_DB_NAME=nacos_config
+      - MYSQL_SERVICE_DB_PARAM=characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+      - NACOS_AUTH_IDENTITY_KEY=forum
+      - NACOS_AUTH_IDENTITY_VALUE=forum
+      - JVM_XMS=512m
+      - JVM_XMX=512m
+      - JVM_MMS=320m
+    volumes:
+      - nacos:/home/nacos/logs
+
+volumes:
+  db:
+    driver: local
+  cache:
+    driver: local
+  nacos:
+    driver: local
