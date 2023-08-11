@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO t_srp_password(identifier, verifier, salt) VALUES(?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "0a82647ba2a60befd974be9e5917bd0a94ede124f8c39296f2837c17bf0fdba9"
+}
