@@ -1,17 +1,28 @@
-use actix_web::{get, web::Path};
+use actix_web::{
+    get,
+    web::{Json, Path},
+    Responder,
+};
 
 use crate::{
-    common::errors::{Resp, Result, ServiceError},
-    pojo::po::sms_config::SmsConfig,
+    common::errors::{Result, ServiceError},
     repository::sms_config_repository::select_sms_config,
 };
 
+#[utoipa::path(
+    params(
+        ("id" = i64, Path,)
+    ),
+    responses(
+        (status = 200, description = "OK", body = SmsConfig),
+    )
+)]
 #[get("/smsconfig/{id}")]
-pub async fn get_sms_config(id: Path<i64>) -> Result<Resp<SmsConfig>> {
+pub async fn get_sms_config(id: Path<i64>) -> Result<impl Responder> {
     select_sms_config(*id)
         .await
         .and_then(|sms_config| {
             sms_config.ok_or(ServiceError::NotFount(String::from("sms_config not found")))
         })
-        .map(Resp::success)
+        .map(Json)
 }

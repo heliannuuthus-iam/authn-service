@@ -1,8 +1,9 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 use crate::common::enums::IdpType;
-#[derive(Serialize, Deserialize, Clone, sqlx::FromRow)]
+#[derive(Serialize, Deserialize, Clone, sqlx::FromRow, ToSchema)]
 pub struct User {
     #[serde(rename = "id")]
     pub id: i64,
@@ -35,7 +36,7 @@ pub struct User {
     pub created_at: DateTime<Utc>,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, ToSchema)]
 pub struct UserAssociation {
     #[serde(rename = "id")]
     pub id: i64,
