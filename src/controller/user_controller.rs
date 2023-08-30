@@ -34,7 +34,6 @@ pub async fn registry(Form(registry_form): Form<RegistryForm>) -> Result<impl Re
 
 #[get("/users/rsp/{identifier}")]
 pub async fn user_rsp(identifier: Path<String>) -> Result<impl Responder> {
-
     info!("[获取 srp 信息]: {identifier}");
     select_srp(identifier.into_inner())
         .await

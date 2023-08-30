@@ -24,9 +24,19 @@ pub fn desensitize_email(email: &str) -> String {
 }
 
 pub fn desensitize_text(name: &str) -> String {
-    match name.len().cmp(&2) {
-        Ordering::Equal => format!("{}*", &name[..1]),
+    let mut left = 1;
+    while !name.is_char_boundary(left) {
+        left += 1
+    }
+    match name.chars().count().cmp(&2) {
+        Ordering::Equal => format!("{}*", &name[..left]),
         Ordering::Less => name.to_string(),
-        Ordering::Greater => format!("{}*{}", &name[..1], &name[name.len() - 1..]),
+        Ordering::Greater => {
+            let mut right = name.len() - 1;
+            while !name.is_char_boundary(right) {
+                right -= 1
+            }
+            format!("{}*{}", &name[..left], &name[right..])
+        }
     }
 }
