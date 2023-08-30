@@ -6,8 +6,6 @@ use actix_web::{
 use redis::RedisError;
 use thiserror::Error;
 
-use crate::common::srp::errors::SrpError;
-
 pub type Result<T> = std::result::Result<T, ServiceError>;
 
 pub struct Resp<T> {

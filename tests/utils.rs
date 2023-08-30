@@ -20,10 +20,18 @@ mod utils_test {
     #[test]
     fn test_desensitize_full_name() {
         assert_eq!(utils::desensitize_text("我的"), "我*");
+        assert_eq!(utils::desensitize_text("sd"), "s*");
     }
 
     #[test]
     fn test_desensitize_full_name_grater_than_2() {
         assert_eq!(utils::desensitize_text("我们的"), "我*的");
+        assert_eq!(utils::desensitize_text("abc"), "a*c");
+    }
+
+    #[test]
+    fn test_desensitize_full_name_little_than_2() {
+        assert_eq!(utils::desensitize_text("我"), "我");
+        assert_eq!(utils::desensitize_text("a"), "a");
     }
 }

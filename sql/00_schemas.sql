@@ -1,5 +1,7 @@
 CREATE DATABASE IF NOT EXISTS nacos_config;
+
 use nacos_config;
+
 /******************************************/
 /*   表名称 = config_info                  */
 /******************************************/
@@ -24,6 +26,7 @@ CREATE TABLE `config_info` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_configinfo_datagrouptenant` (`data_id`, `group_id`, `tenant_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_bin COMMENT = 'config_info';
+
 /******************************************/
 /*   表名称 = config_info_aggr             */
 /******************************************/
@@ -39,6 +42,7 @@ CREATE TABLE `config_info_aggr` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_configinfoaggr_datagrouptenantdatum` (`data_id`, `group_id`, `tenant_id`, `datum_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_bin COMMENT = '增加租户字段';
+
 /******************************************/
 /*   表名称 = config_info_beta             */
 /******************************************/
@@ -59,6 +63,7 @@ CREATE TABLE `config_info_beta` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_configinfobeta_datagrouptenant` (`data_id`, `group_id`, `tenant_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_bin COMMENT = 'config_info_beta';
+
 /******************************************/
 /*   表名称 = config_info_tag              */
 /******************************************/
@@ -78,6 +83,7 @@ CREATE TABLE `config_info_tag` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_configinfotag_datagrouptenanttag` (`data_id`, `group_id`, `tenant_id`, `tag_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_bin COMMENT = 'config_info_tag';
+
 /******************************************/
 /*   表名称 = config_tags_relation         */
 /******************************************/
@@ -93,6 +99,7 @@ CREATE TABLE `config_tags_relation` (
   UNIQUE KEY `uk_configtagrelation_configidtag` (`id`, `tag_name`, `tag_type`),
   KEY `idx_tenant_id` (`tenant_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_bin COMMENT = 'config_tag_relation';
+
 /******************************************/
 /*   表名称 = group_capacity               */
 /******************************************/
@@ -110,6 +117,7 @@ CREATE TABLE `group_capacity` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_group_id` (`group_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_bin COMMENT = '集群、各Group容量信息表';
+
 /******************************************/
 /*   表名称 = his_config_info              */
 /******************************************/
@@ -133,6 +141,7 @@ CREATE TABLE `his_config_info` (
   KEY `idx_gmt_modified` (`gmt_modified`),
   KEY `idx_did` (`data_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_bin COMMENT = '多租户改造';
+
 /******************************************/
 /*   表名称 = tenant_capacity              */
 /******************************************/
@@ -150,6 +159,7 @@ CREATE TABLE `tenant_capacity` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_tenant_id` (`tenant_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_bin COMMENT = '租户容量信息表';
+
 CREATE TABLE `tenant_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `kp` varchar(128) NOT NULL COMMENT 'kp',
@@ -163,27 +173,31 @@ CREATE TABLE `tenant_info` (
   UNIQUE KEY `uk_tenant_info_kptenantid` (`kp`, `tenant_id`),
   KEY `idx_tenant_id` (`tenant_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_bin COMMENT = 'tenant_info';
+
 CREATE TABLE `users` (
   `username` varchar(50) NOT NULL PRIMARY KEY COMMENT 'username',
   `password` varchar(500) NOT NULL COMMENT 'password',
   `enabled` boolean NOT NULL COMMENT 'enabled'
 );
+
 CREATE TABLE `roles` (
   `username` varchar(50) NOT NULL COMMENT 'username',
   `role` varchar(50) NOT NULL COMMENT 'role',
   UNIQUE INDEX `idx_user_role` (`username` ASC, `role` ASC) USING BTREE
 );
+
 CREATE TABLE `permissions` (
   `role` varchar(50) NOT NULL COMMENT 'role',
   `resource` varchar(255) NOT NULL COMMENT 'resource',
   `action` varchar(8) NOT NULL COMMENT 'action',
   UNIQUE INDEX `uk_role_permission` (`role`, `resource`, `action`) USING BTREE
 );
+
 CREATE DATABASE IF NOT EXISTS forum;
 
 -- service
-
 use forum;
+
 CREATE TABLE IF NOT EXISTS t_user (
   id BIGINT(22) AUTO_INCREMENT NOT NULL,
   openid VARCHAR(22) NOT NULL,
@@ -199,6 +213,7 @@ CREATE TABLE IF NOT EXISTS t_user (
   PRIMARY KEY(id),
   UNIQUE uniq_openid(openid) UNIQUE uniq_email(email)
 );
+
 CREATE TABLE IF NOT EXISTS t_user_association (
   id BIGINT(22) AUTO_INCREMENT NOT NULL,
   openid VARCHAR(22) NOT NULL,
@@ -209,6 +224,7 @@ CREATE TABLE IF NOT EXISTS t_user_association (
   PRIMARY KEY(id),
   UNIQUE uniq_openid(openid)
 );
+
 CREATE TABLE IF NOT EXISTS t_sms_config (
   id BIGINT(22) AUTO_INCREMENT NOT NULL,
   name VARCHAR(255) NOT NULL,
@@ -217,6 +233,7 @@ CREATE TABLE IF NOT EXISTS t_sms_config (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(id)
 );
+
 -- https://datatracker.ietf.org/doc/html/rfc2945
 CREATE TABLE IF NOT EXISTS t_srp_password (
   id BIGINT(22) AUTO_INCREMENT NOT NULL,
@@ -228,35 +245,31 @@ CREATE TABLE IF NOT EXISTS t_srp_password (
   PRIMARY KEY(id),
   UNIQUE uniq_identifier(identifier),
 );
-CREATE TABLE IF NOT EXISTS t_client (
-  id BIGINT(22) AUTO_INCREMENT NOT NULL,
-  client_id varchar(32) NOT NULL,
-  name varchar(255) NOT NULL,
-  logo text NOT NULL,
-  description text NOT NULL,
-  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY(id),
-  UNIQUE uniq_client_id(client_id),
-);
+
 CREATE TABLE IF NOT EXISTS t_client_config (
   id BIGINT(22) AUTO_INCREMENT NOT NULL,
   client_id varchar(32) NOT NULL,
-  redirect_uri text NOT NULL,
+  name varchar(128) NOT NULL,
+  logo text NOT NULL,
+  description text NOT NULL,
+  redirect_url text NOT NULL,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(id),
   UNIQUE uniq_client_id(client_id),
 );
+
 CREATE TABLE IF NOT EXISTS t_client_idp_config (
   id BIGINT(22) AUTO_INCREMENT NOT NULL,
   client_id varchar(32) NOT NULL,
-  idp_type varchar(16) NOT NULL,
+  idp_type varchar(32) NOT NULL,
   idp_client_id varchar(255) NOT NULL,
-  idp_client_secret varchar(2048) NOT NULL,
+  idp_client_secret varchar(4096) NOT NULL,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(id),
   UNIQUE uniq_client_id(client_id),
+  UNIQUE uniq_idp_type_client_id(client_id, idp_type, idp_client_id),
 );
+
 GRANT ALL PRIVILEGES ON *.* TO 'forum' @'%';
