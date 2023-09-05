@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 pub fn desensitize_email(email: &str) -> String {
     let parts: Vec<&str> = email.split('@').collect();
     if parts.len() == 2 {
@@ -6,13 +8,13 @@ pub fn desensitize_email(email: &str) -> String {
         if username.len() > 4 {
             format!(
                 "{}@{}",
-                format!("{}****{}", &username[..2], &username[username.len() - 2..]),
+                format_args!("{}****{}", &username[..2], &username[username.len() - 2..]),
                 domain
             )
         } else {
             format!(
                 "{}@{}",
-                format!("{}****{}", &username[..1], &username[username.len() - 1..]),
+                format_args!("{}****{}", &username[..1], &username[username.len() - 1..]),
                 domain
             )
         }
@@ -22,13 +24,19 @@ pub fn desensitize_email(email: &str) -> String {
 }
 
 pub fn desensitize_text(name: &str) -> String {
-    let chars = name;
-    println!("length: {}", chars.len());
-    if chars.len() == 2 {
-        format!("{}*", &name[..1])
-    } else if chars.len() > 2 {
-        format!("{}*{}", &name[..1], &name[name.len() - 1..])
-    } else {
-        name.to_string()
+    let mut left = 1;
+    while !name.is_char_boundary(left) {
+        left += 1
+    }
+    match name.chars().count().cmp(&2) {
+        Ordering::Equal => format!("{}*", &name[..left]),
+        Ordering::Less => name.to_string(),
+        Ordering::Greater => {
+            let mut right = name.len() - 1;
+            while !name.is_char_boundary(right) {
+                right -= 1
+            }
+            format!("{}*{}", &name[..left], &name[right..])
+        }
     }
 }

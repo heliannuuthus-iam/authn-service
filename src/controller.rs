@@ -1,2 +1,3 @@
 pub mod sms_config_controller;
-pub mod usercontroller;
+pub mod user_association_controller;
+pub mod user_controller;

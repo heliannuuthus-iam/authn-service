@@ -1,10 +1,7 @@
-use actix_web::{body, HttpResponse, Responder, ResponseError};
 use actix_web::{
-    http::{
-        header::{self, ContentType, HeaderValue},
-        ConnectionType, StatusCode,
-    },
-    web,
+    body,
+    http::{header::ContentType, StatusCode},
+    HttpResponse, Responder, ResponseError,
 };
 use redis::RedisError;
 use thiserror::Error;
@@ -13,12 +10,12 @@ pub type Result<T> = std::result::Result<T, ServiceError>;
 
 pub struct Resp<T> {
     pub body: T,
-    pub status: StatusCode,
+    pub code: StatusCode,
 }
 
 impl<T> Resp<T> {
-    fn new(body: T, status: StatusCode) -> Self {
-        Self { body, status }
+    fn new(body: T, code: StatusCode) -> Self {
+        Self { body, code }
     }
     pub fn success(body: T) -> Self {
         Self::new(body, StatusCode::OK)
@@ -31,8 +28,8 @@ where
 {
     type Body = body::BoxBody;
 
-    fn respond_to(self, _req: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body> {
-        HttpResponse::build(self.status)
+    fn respond_to(self, _req: &actix_web::HttpRequest) -> HttpResponse<Self::Body> {
+        HttpResponse::build(self.code)
             .insert_header(ContentType::json())
             .body(body::BoxBody::new(
                 serde_json::to_string(&self.body).unwrap(),
@@ -43,11 +40,11 @@ where
 #[derive(Debug, Error)]
 pub enum ConfigError {
     #[error("Redis error {0}")]
-    Redis(RedisError),
+    Redis(#[from] RedisError),
     #[error("datasource error {0}")]
-    DataSource(sqlx::Error),
+    DataSource(#[from] sqlx::Error),
     #[error("reqwest error {0}")]
-    Reqwest(reqwest::Error),
+    Reqwest(#[from] reqwest::Error),
 }
 
 #[derive(Debug, Error)]
@@ -58,14 +55,16 @@ pub enum ServiceError {
     Unauthenticated(String),
     #[error("Unallowable scope {0}")]
     Forbidden(String),
-    #[error("Unknown infomation {0}")]
+    #[error("Unknown information {0}")]
     NotFount(String),
     #[error("Not access {0}")]
-    NotAccessable(String),
+    NotAccessible(String),
     #[error("Unprocessable content {0}")]
     UnprocessableEntity(String),
     #[error("an unspecified internal error occurred {0}")]
     InternalError(#[from] anyhow::Error),
+    #[error("internal config error {0}")]
+    InternalConfigError(#[from] ConfigError),
 }
 
 impl ResponseError for ServiceError {
@@ -75,15 +74,19 @@ impl ResponseError for ServiceError {
             ServiceError::Unauthenticated(_) => StatusCode::UNAUTHORIZED,
             ServiceError::Forbidden(_) => StatusCode::FORBIDDEN,
             ServiceError::NotFount(_) => StatusCode::NOT_FOUND,
-            ServiceError::NotAccessable(_) => StatusCode::NOT_ACCEPTABLE,
+            ServiceError::NotAccessible(_) => StatusCode::NOT_ACCEPTABLE,
             ServiceError::UnprocessableEntity(_) => StatusCode::UNPROCESSABLE_ENTITY,
             ServiceError::InternalError(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            _ => StatusCode::INTERNAL_SERVER_ERROR,
+            ServiceError::InternalConfigError(e) => match e {
+                ConfigError::DataSource(_) => StatusCode::INTERNAL_SERVER_ERROR,
+                ConfigError::Reqwest(e) => e.status().unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+                ConfigError::Redis(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            },
         }
     }
 
-    fn error_response(&self) -> actix_web::HttpResponse {
-        actix_web::HttpResponse::build(self.status_code())
+    fn error_response(&self) -> HttpResponse {
+        HttpResponse::build(self.status_code())
             .insert_header(ContentType::json())
             .body(format!(
                 r#"{{
@@ -91,7 +94,7 @@ impl ResponseError for ServiceError {
                 "msg": "{}"
             }}"#,
                 self.status_code().as_str(),
-                self.to_string()
+                self
             ))
     }
 }

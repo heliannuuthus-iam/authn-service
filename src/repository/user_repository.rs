@@ -6,7 +6,7 @@ use crate::{
     pojo::po::user::User,
 };
 
-pub async fn create(user: &User) -> Result<()> {
+pub async fn create_user(user: &User) -> Result<()> {
     sqlx::query!(
         r#"
             INSERT INTO t_user(avatar, username, gander, email, email_verified) VALUES(?, ?, ?, ?, ?)
@@ -22,12 +22,8 @@ pub async fn create(user: &User) -> Result<()> {
     Ok(())
 }
 
-pub async fn select_profile_by_union(
-    openid: Option<String>,
-    email: Option<String>,
-) -> Result<Option<User>> {
-    let mut query: QueryBuilder<'_, MySql> =
-        QueryBuilder::new("SELECT * FROM t_user WHERE 1=1 ");
+pub async fn select_profile(openid: Option<String>, email: Option<String>) -> Result<Option<User>> {
+    let mut query: QueryBuilder<'_, MySql> = QueryBuilder::new("SELECT * FROM t_user WHERE 1=1 ");
     if let Some(e) = email {
         query.push(" AND email = ");
         query.push_bind(e);
