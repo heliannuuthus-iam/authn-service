@@ -9,15 +9,17 @@ use crate::{
 };
 
 pub async fn select_user_associations(openid: &str) -> Result<Vec<UserAssociationDTO>> {
-    sqlx::query_as!(
+    Ok(sqlx::query_as!(
         UserAssociation,
-        "SELECT * FROM t_user_association WHERE openid = ?",
+        "SELECT openid, idp_openid, idp_type FROM t_user_association WHERE openid = ?",
         openid
     )
     .fetch_all(&*CONN)
     .await
-    .context(format!("select user{openid} associations failed"))?;
-    Ok(vec![])
+    .context(format!("select user{openid} associations failed"))?
+    .iter()
+    .map(|s| UserAssociationDTO::from(s.clone()))
+    .collect())
 }
 
 pub async fn select_user_associations_by_idp_openid(
@@ -25,7 +27,7 @@ pub async fn select_user_associations_by_idp_openid(
 ) -> Result<(String, Vec<UserAssociationDTO>)> {
     let idp_association = &(sqlx::query_as!(
         UserAssociation,
-        "SELECT * FROM t_user_association WHERE idp_openid = ?",
+        "SELECT openid, idp_openid, idp_type FROM t_user_association WHERE idp_openid = ?",
         idp_openid
     )
     .fetch_optional(&*CONN)

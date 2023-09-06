@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-#[derive(Deserialize, Serialize, Clone, Copy, Default, ToSchema)]
+#[derive(Deserialize, Serialize, Debug, Clone, Copy, Default, ToSchema, sqlx::Type)]
+#[sqlx(rename_all = "lowercase")]
 pub enum IdpType {
     #[serde(rename = "github")]
     GitHub,

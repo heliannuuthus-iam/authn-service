@@ -6,10 +6,12 @@ use crate::{
 };
 
 pub async fn select_sms_config(id: i64) -> Result<Option<SmsConfig>> {
-    Ok(
-        sqlx::query_as!(SmsConfig, "SELECT * FROM t_sms_config where id = ?", id)
-            .fetch_optional(&*CONN)
-            .await
-            .context("select sms config failed")?,
+    Ok(sqlx::query_as!(
+        SmsConfig,
+        "SELECT name, template FROM t_sms_config where id = ?",
+        id
     )
+    .fetch_optional(&*CONN)
+    .await
+    .context("select sms config failed")?)
 }

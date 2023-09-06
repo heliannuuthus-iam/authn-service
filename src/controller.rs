@@ -3,13 +3,18 @@ pub mod sms_config_controller;
 pub mod user_association_controller;
 pub mod user_controller;
 
-use user_controller::RegistryForm;
 use utoipa::OpenApi;
 
 use crate::{
     common::enums::IdpType,
     pojo::{
         dto::user::{UserAssociationDTO, UserProfileDTO},
+        form::{
+            client::{
+                ClientConfigCreateForm, ClientConfigUpdateForm, ClientIdpConfigSaveOrUpdateForm,
+            },
+            user::RegistryForm,
+        },
         po::{
             client::{ClientConfig, ClientIdpConfig},
             sms_config::SmsConfig,
@@ -24,6 +29,9 @@ use crate::{
         client_config_controller::create_client,
         client_config_controller::client_config,
         client_config_controller::set_client_config,
+        client_config_controller::client_specify_idp_config,
+        client_config_controller::client_all_idp_config,
+        client_config_controller::set_client_idp_config,
         sms_config_controller::get_sms_config,
         user_association_controller::user_associations,
         user_association_controller::user_idp_associations,
@@ -31,8 +39,10 @@ use crate::{
         user_controller::user_profile,
     ),
     components(schemas(
-        client_config_controller::ClientConfigCreateForm,
-        client_config_controller::ClientConfigUpdateForm,
+        ClientConfigCreateForm,
+        ClientConfigUpdateForm,
+        ClientIdpConfigSaveOrUpdateForm,
+        RegistryForm,
         ClientConfig,
         ClientIdpConfig,
         SmsConfig,
@@ -41,7 +51,6 @@ use crate::{
         SrpPassword,
         User,
         UserProfileDTO,
-        RegistryForm,
         IdpType
     ))
 )]

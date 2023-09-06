@@ -7,7 +7,7 @@ use crate::{
     pojo::po::user::{User, UserAssociation},
 };
 
-#[derive(Serialize, Deserialize, Clone, Builder, ToSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, Builder, ToSchema)]
 pub struct UserProfileDTO {
     pub openid: String,
     pub email: String,
@@ -29,7 +29,7 @@ impl From<User> for UserProfileDTO {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, ToSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, ToSchema)]
 pub struct UserAssociationDTO {
     #[serde(rename = "idp_openid")]
     pub idp_openid: String,

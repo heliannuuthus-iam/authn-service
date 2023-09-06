@@ -1,20 +1,10 @@
 {
   "db_name": "MySQL",
-  "query": "SELECT * FROM t_client_config WHERE client_id = ?",
+  "query": "SELECT client_id, name, logo, description, redirect_url FROM t_client_config WHERE client_id = ?",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
-        "name": "id",
-        "type_info": {
-          "type": "LongLong",
-          "flags": "NOT_NULL | PRIMARY_KEY | AUTO_INCREMENT",
-          "char_set": 63,
-          "max_size": 22
-        }
-      },
-      {
-        "ordinal": 1,
         "name": "client_id",
         "type_info": {
           "type": "VarString",
@@ -24,7 +14,7 @@
         }
       },
       {
-        "ordinal": 2,
+        "ordinal": 1,
         "name": "name",
         "type_info": {
           "type": "VarString",
@@ -34,7 +24,7 @@
         }
       },
       {
-        "ordinal": 3,
+        "ordinal": 2,
         "name": "logo",
         "type_info": {
           "type": "Blob",
@@ -44,18 +34,8 @@
         }
       },
       {
-        "ordinal": 4,
+        "ordinal": 3,
         "name": "description",
-        "type_info": {
-          "type": "Blob",
-          "flags": "NOT_NULL | BLOB | NO_DEFAULT_VALUE",
-          "char_set": 224,
-          "max_size": 262140
-        }
-      },
-      {
-        "ordinal": 5,
-        "name": "redirect_url",
         "type_info": {
           "type": "Blob",
           "flags": "BLOB",
@@ -64,23 +44,13 @@
         }
       },
       {
-        "ordinal": 6,
-        "name": "updated_at",
+        "ordinal": 4,
+        "name": "redirect_url",
         "type_info": {
-          "type": "Timestamp",
-          "flags": "NOT_NULL | BINARY | TIMESTAMP | ON_UPDATE_NOW",
-          "char_set": 63,
-          "max_size": 19
-        }
-      },
-      {
-        "ordinal": 7,
-        "name": "created_at",
-        "type_info": {
-          "type": "Timestamp",
-          "flags": "NOT_NULL | BINARY | TIMESTAMP",
-          "char_set": 63,
-          "max_size": 19
+          "type": "Blob",
+          "flags": "BLOB",
+          "char_set": 224,
+          "max_size": 262140
         }
       }
     ],
@@ -91,12 +61,9 @@
       false,
       false,
       false,
-      false,
-      false,
       true,
-      false,
-      false
+      true
     ]
   },
-  "hash": "04f0870f2a859342f90796af681ba695d043d9800f6d082d9dfac72b88000d4a"
+  "hash": "d2262e25ed2a2dc35a582fed0d45643493adb54ac769b9e6b6fb926ea78398bc"
 }

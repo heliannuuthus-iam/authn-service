@@ -21,7 +21,7 @@ pub async fn save_srp(identifier: String, verifier: String, salt: String) -> Res
 pub async fn select_srp(identifier: String) -> Result<Option<SrpPassword>> {
     Ok(sqlx::query_as!(
         SrpPassword,
-        "SELECT * FROM t_srp_password where identifier = ?",
+        "SELECT identifier, verifier, salt FROM t_srp_password where identifier = ?",
         identifier
     )
     .fetch_optional(&*CONN)

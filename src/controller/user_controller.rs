@@ -3,28 +3,14 @@ use actix_web::{
     web::{Form, Json, Path},
     HttpResponse, Responder,
 };
-use serde;
 use tracing::info;
-use utoipa::{IntoParams, ToSchema};
 
 use crate::{
     common::errors::{Result, ServiceError},
+    pojo::form::user::RegistryForm,
     repository::password_repository::{save_srp, select_srp},
     service::user_service::get_user,
 };
-
-#[derive(serde::Deserialize, Debug)]
-pub struct ProfileQuery(
-    #[serde(rename = "openid")] pub Option<String>,
-    #[serde(rename = "email")] pub Option<String>,
-);
-
-#[derive(serde::Serialize, serde::Deserialize, Debug, ToSchema, IntoParams)]
-pub struct RegistryForm {
-    pub identifier: String,
-    pub verifier: String,
-    pub salt: String,
-}
 
 #[utoipa::path(
     params(

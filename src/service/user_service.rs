@@ -45,7 +45,7 @@ pub async fn get_profile_by_idp_openid(idp_openid: &str) -> Result<UserProfileDT
     let (openid, associations): (String, Vec<UserAssociationDTO>) =
         select_user_associations_by_idp_openid(idp_openid).await?;
     let mut user = UserProfileDTO::from(get_user(&openid).await?);
-    user.associations = associations;
+    user.associations = associations.clone();
     Ok(user)
 }
 
@@ -55,10 +55,9 @@ pub async fn get_profile_with_associations(openid: &str) -> Result<UserProfileDT
         .await
         .map(|associations| {
             let mut user = UserProfileDTO::from(user);
-            user.associations = associations;
+            user.associations = associations.clone();
             user
         })
         .context(format!("get user({openid}) association failed"))?;
-
     Ok(user_profile)
 }

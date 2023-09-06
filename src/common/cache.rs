@@ -61,15 +61,15 @@ where
 {
     let mut conn = borrow().await?;
 
-    redis::cmd("SETNX")
+    redis::cmd("SETEX")
         .arg(key)
         .arg(expires_in.num_seconds())
         .arg(
             serde_json::to_string(&value)
-                .context(format!("redis SETNX serialize failed {}", key))?,
+                .context(format!("redis SETEX serialize failed {}", key))?,
         )
         .query_async(&mut conn)
         .await
-        .context(format!("redis SETNX failed {}", key))?;
+        .context(format!("redis SETEX failed {}", key))?;
     Ok(())
 }

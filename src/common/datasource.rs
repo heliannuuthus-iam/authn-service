@@ -18,14 +18,17 @@ lazy_static! {
     };
 }
 
-pub fn to_vec<S>(v: &str, serializer: S) -> Result<S::Ok, S::Error>
+pub fn to_vec<S>(v: &Option<String>, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: serde::Serializer,
 {
-    let str_split: Vec<String> = v.split(',').map(|s| s.to_string()).collect();
+    let str_splitor = match v {
+        Some(vv) => vv.split(',').map(|s| s.to_string()).collect(),
+        None => vec![],
+    };
     let mut seq_serializer: <S as serde::Serializer>::SerializeSeq =
-        serializer.serialize_seq(Some(str_split.len()))?;
-    for strs in str_split {
+        serializer.serialize_seq(Some(str_splitor.len()))?;
+    for strs in str_splitor {
         seq_serializer.serialize_element(&strs)?;
     }
     seq_serializer.end()
