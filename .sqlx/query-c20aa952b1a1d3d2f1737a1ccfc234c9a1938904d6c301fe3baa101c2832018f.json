@@ -8,7 +8,11 @@
         "name": "client_id",
         "type_info": {
           "type": "VarString",
+<<<<<<< HEAD
           "flags": "NOT_NULL | UNIQUE_KEY | MULTIPLE_KEY | NO_DEFAULT_VALUE",
+=======
+          "flags": "NOT_NULL | MULTIPLE_KEY | NO_DEFAULT_VALUE",
+>>>>>>> 709b431 (client_idp_query)
           "char_set": 224,
           "max_size": 128
         }

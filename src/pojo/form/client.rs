@@ -2,8 +2,8 @@ use serde::{Deserialize, Serialize};
 use utoipa::{IntoParams, ToSchema};
 
 use crate::{
-    common::{config::Patch, datasource::from_vec, enums::IdpType},
-    pojo::po::client::ClientConfig,
+    common::{config::Patch, datasource::from_vec, enums::IdpType, utils::gen_id},
+    pojo::po::client::{ClientConfig, ClientIdpConfig},
 };
 
 #[derive(Serialize, Deserialize, IntoParams, ToSchema)]
@@ -46,9 +46,32 @@ impl Patch for ClientConfigUpdateForm {
     }
 }
 
+impl Into<ClientConfig> for ClientConfigCreateForm {
+    fn into(self) -> ClientConfig {
+        ClientConfig {
+            client_id: gen_id(32),
+            name: self.name,
+            logo: self.logo,
+            description: self.desc,
+            ..Default::default()
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, IntoParams, ToSchema)]
 pub struct ClientIdpConfigSaveOrUpdateForm {
     pub idp_type: IdpType,
     pub idp_client_id: String,
     pub idp_client_secret: String,
+}
+
+impl Into<ClientIdpConfig> for ClientIdpConfigSaveOrUpdateForm {
+    fn into(self) -> ClientIdpConfig {
+        ClientIdpConfig {
+            idp_client_id: self.idp_client_id,
+            idp_type: self.idp_type,
+            idp_client_secret: self.idp_client_secret,
+            ..Default::default()
+        }
+    }
 }

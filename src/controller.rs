@@ -1,4 +1,5 @@
 pub mod client_config_controller;
+pub mod password_controller;
 pub mod sms_config_controller;
 pub mod user_association_controller;
 pub mod user_controller;
@@ -37,6 +38,7 @@ use crate::{
         user_association_controller::create_user_and_init_idp_asso,
         user_controller::user_rsp,
         user_controller::user_profile,
+        password_controller::user_profile,
     ),
     components(schemas(
         ClientConfigCreateForm,

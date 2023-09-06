@@ -28,14 +28,6 @@ lazy_static! {
     };
 }
 
-pub async fn acquire_conn() -> Result<PoolConnection<MySql>, ServiceError> {
-    Ok(CONN.acquire().await.with_context(|| {
-        let msg = format!("acquire mysql connection failed");
-        tracing::error!(msg);
-        msg
-    })?)
-}
-
 pub async fn tx_begin(action: &str) -> Result<sqlx::Transaction<'_, MySql>, ServiceError> {
     Ok(CONN.begin().await.with_context(|| {
         let msg = format!("begin transaction failed, event: {}", action);

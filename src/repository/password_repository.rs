@@ -5,7 +5,7 @@ use crate::{
     pojo::po::srp::SrpPassword,
 };
 
-pub async fn save_srp(identifier: String, verifier: String, salt: String) -> Result<()> {
+pub async fn save_srp(identifier: &str, verifier: &str, salt: &str) -> Result<()> {
     sqlx::query!(
         "INSERT INTO t_srp_password(identifier, verifier, salt) VALUES(?, ?, ?)",
         identifier,
@@ -18,7 +18,7 @@ pub async fn save_srp(identifier: String, verifier: String, salt: String) -> Res
     Ok(())
 }
 
-pub async fn select_srp(identifier: String) -> Result<Option<SrpPassword>> {
+pub async fn select_srp(identifier: &str) -> Result<Option<SrpPassword>> {
     Ok(sqlx::query_as!(
         SrpPassword,
         "SELECT identifier, verifier, salt FROM t_srp_password where identifier = ?",
