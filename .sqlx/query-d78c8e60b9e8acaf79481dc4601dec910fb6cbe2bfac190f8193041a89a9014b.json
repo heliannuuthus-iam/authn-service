@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO t_client_config(client_id, name, logo, description) VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE name = ?, logo = ?, description = ?, redirect_url = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 8
+    },
+    "nullable": []
+  },
+  "hash": "d78c8e60b9e8acaf79481dc4601dec910fb6cbe2bfac190f8193041a89a9014b"
+}
