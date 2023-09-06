@@ -30,13 +30,10 @@ sqlx = { version = "0.7", features = [
     "chrono",
     "uuid",
 ] }
-env_logger = "0.10.0"
 anyhow = "1.0.72"
 dotenvy = "0.15.7"
 uuid = { version = "1.4.1", features = ["v4", "serde"] }
 nacos-sdk = { version = "0.3", features = ["async"] }
-num-bigint = { version = "0.4.3", features = ["rand"] }
 base64 = "0.21.2"
-hex = "0.4.3"
 utoipa = { version = "3.5.0", features = ["actix_extras", "chrono"] }
 utoipa-redoc = { version = "0.1.0", features = ["actix-web"] }
