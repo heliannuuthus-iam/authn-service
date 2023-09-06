@@ -22,7 +22,9 @@ pub async fn get_sms_config(id: Path<i64>) -> Result<impl Responder> {
     select_sms_config(*id)
         .await
         .and_then(|sms_config| {
-            sms_config.ok_or(ServiceError::NotFount(String::from("sms_config not found")))
+            sms_config.ok_or(ServiceError::ReponseError(actix_web::error::ErrorNotFound(
+                "sms_config not found",
+            )))
         })
         .map(Json)
 }

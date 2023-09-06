@@ -38,7 +38,7 @@
         "name": "description",
         "type_info": {
           "type": "Blob",
-          "flags": "BLOB",
+          "flags": "NOT_NULL | BLOB | NO_DEFAULT_VALUE",
           "char_set": 224,
           "max_size": 262140
         }
@@ -61,7 +61,7 @@
       false,
       false,
       false,
-      true,
+      false,
       true
     ]
   },

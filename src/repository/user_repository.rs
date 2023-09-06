@@ -6,7 +6,7 @@ use crate::{
     pojo::po::user::User,
 };
 
-pub async fn create_user(user: &User) -> Result<()> {
+pub async fn save_user(user: &User) -> Result<()> {
     sqlx::query!(
         r#"
             INSERT INTO t_user(avatar, username, gander, email, email_verified) VALUES(?, ?, ?, ?, ?)

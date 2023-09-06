@@ -8,7 +8,7 @@ use utoipa::OpenApi;
 use crate::{
     common::enums::IdpType,
     pojo::{
-        dto::user::{UserAssociationDTO, UserProfileDTO},
+        dto::user::UserProfileDTO,
         form::{
             client::{
                 ClientConfigCreateForm, ClientConfigUpdateForm, ClientIdpConfigSaveOrUpdateForm,
@@ -46,7 +46,6 @@ use crate::{
         ClientConfig,
         ClientIdpConfig,
         SmsConfig,
-        UserAssociationDTO,
         UserAssociation,
         SrpPassword,
         User,

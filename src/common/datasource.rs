@@ -1,10 +1,12 @@
 use std::string::String;
 
+use anyhow::Context;
 use chrono::Duration;
 use lazy_static::lazy_static;
 use serde::{ser::SerializeSeq, Deserialize};
 use sqlx::{mysql::MySqlPoolOptions, MySql, Pool};
 
+use super::errors::ServiceError;
 use crate::common::config::env_var;
 
 lazy_static! {
@@ -16,6 +18,22 @@ lazy_static! {
             .connect_lazy(env_var::<String>("DATABASE_URL").as_str())
             .unwrap()
     };
+}
+
+pub async fn tx_begin(action: &str) -> Result<sqlx::Transaction<'_, MySql>, ServiceError> {
+    Ok(CONN.begin().await.with_context(|| {
+        let msg: String = format!("begin transication failed event: {}", action);
+        tracing::error!(msg);
+        msg
+    })?)
+}
+
+pub async fn tx_commit(tx: sqlx::Transaction<'_, MySql>, action: &str) -> Result<(), ServiceError> {
+    Ok(tx.commit().await.with_context(|| {
+        let msg: String = format!("commit transication failed event: {}", action);
+        tracing::error!(msg);
+        msg
+    })?)
 }
 
 pub fn to_vec<S>(v: &Option<String>, serializer: S) -> Result<S::Ok, S::Error>
@@ -39,7 +57,7 @@ where
     D: serde::Deserializer<'de>,
 {
     let str_sequence = Vec::<String>::deserialize(deserializer)?;
-    if str_sequence.len() == 0 {
+    if str_sequence.is_empty() {
         Ok(None)
     } else {
         Ok(Some(str_sequence.join(",")))

@@ -1,3 +1,5 @@
+use actix_web::error::ErrorNotFound;
+
 use crate::{
     common::errors::{Result, ServiceError},
     pojo::po::client::ClientConfig,
@@ -9,6 +11,8 @@ pub async fn get_client_config(client_id: &str) -> Result<ClientConfig> {
         .await
         .and_then(|cli_op| match cli_op {
             Some(client) => Ok(client),
-            None => Err(ServiceError::NotFount(format!("client is nonexsitent"))),
+            None => Err(ServiceError::ReponseError(ErrorNotFound(format!(
+                "client is nonexsitent"
+            )))),
         })
 }

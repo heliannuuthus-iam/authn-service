@@ -1,6 +1,6 @@
 {
   "db_name": "MySQL",
-  "query": "SELECT openid, idp_openid, idp_type FROM t_user_association WHERE openid = ?",
+  "query": "SELECT openid, idp_openid, idp_type, idp_extra FROM t_user_association WHERE idp_openid = ?",
   "describe": {
     "columns": [
       {
@@ -8,7 +8,7 @@
         "name": "openid",
         "type_info": {
           "type": "VarString",
-          "flags": "NOT_NULL | MULTIPLE_KEY | NO_DEFAULT_VALUE",
+          "flags": "NOT_NULL | UNIQUE_KEY | NO_DEFAULT_VALUE",
           "char_set": 224,
           "max_size": 88
         }
@@ -32,6 +32,16 @@
           "char_set": 224,
           "max_size": 64
         }
+      },
+      {
+        "ordinal": 3,
+        "name": "idp_extra",
+        "type_info": {
+          "type": "Json",
+          "flags": "BLOB | BINARY",
+          "char_set": 63,
+          "max_size": 4294967295
+        }
       }
     ],
     "parameters": {
@@ -40,8 +50,9 @@
     "nullable": [
       false,
       false,
-      false
+      false,
+      true
     ]
   },
-  "hash": "f76f640ebfa81f3a55edac0e45ce74b142a8cfe7d4fef3d2daf0632bc25ea410"
+  "hash": "8252ca21db554bfa27dec83677d0aadbaffb6003ae74c95d51db2b00240d6753"
 }
