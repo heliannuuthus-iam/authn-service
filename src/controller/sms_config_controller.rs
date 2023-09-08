@@ -10,6 +10,7 @@ use crate::{
 };
 
 #[utoipa::path(
+    operation_id = "新增 sms 模版信息",
     params(
         ("id" = i64, Path,)
     ),

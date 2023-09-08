@@ -4,7 +4,11 @@ use anyhow::Context;
 use chrono::Duration;
 use lazy_static::lazy_static;
 use serde::{ser::SerializeSeq, Deserialize};
-use sqlx::{mysql::MySqlPoolOptions, MySql, Pool};
+use sqlx::{
+    mysql::{MySqlConnectOptions, MySqlPoolOptions, MySqlTransactionManager},
+    pool::PoolConnection,
+    Acquire, ConnectOptions, MySql, MySqlConnection, Pool,
+};
 
 use super::errors::ServiceError;
 use crate::common::config::env_var;
@@ -15,14 +19,26 @@ lazy_static! {
             .max_connections(5)
             .acquire_timeout(Duration::seconds(2).to_std().unwrap())
             .idle_timeout(Duration::seconds(60).to_std().unwrap())
-            .connect_lazy(env_var::<String>("DATABASE_URL").as_str())
-            .unwrap()
+            .connect_lazy_with(
+                env_var::<String>("DATABASE_URL")
+                    .parse::<MySqlConnectOptions>()
+                    .unwrap()
+                    .log_statements(tracing::log::LevelFilter::Debug),
+            )
     };
+}
+
+pub async fn acquire_conn() -> Result<PoolConnection<MySql>, ServiceError> {
+    Ok(CONN.acquire().await.with_context(|| {
+        let msg = format!("acquire mysql connection failed");
+        tracing::error!(msg);
+        msg
+    })?)
 }
 
 pub async fn tx_begin(action: &str) -> Result<sqlx::Transaction<'_, MySql>, ServiceError> {
     Ok(CONN.begin().await.with_context(|| {
-        let msg: String = format!("begin transication failed event: {}", action);
+        let msg = format!("begin transaction failed, event: {}", action);
         tracing::error!(msg);
         msg
     })?)
@@ -30,7 +46,7 @@ pub async fn tx_begin(action: &str) -> Result<sqlx::Transaction<'_, MySql>, Serv
 
 pub async fn tx_commit(tx: sqlx::Transaction<'_, MySql>, action: &str) -> Result<(), ServiceError> {
     Ok(tx.commit().await.with_context(|| {
-        let msg: String = format!("commit transication failed event: {}", action);
+        let msg = format!("commit transaction failed, event: {}", action);
         tracing::error!(msg);
         msg
     })?)

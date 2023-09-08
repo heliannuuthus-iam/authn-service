@@ -26,7 +26,7 @@ async fn main() -> std::io::Result<()> {
     let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
     let _ = tracing::subscriber::set_global_default(
         tracing_subscriber::fmt::Subscriber::builder()
-            .with_max_level(tracing::Level::INFO)
+            .with_max_level(tracing::Level::DEBUG)
             .finish()
             .with(tracing_subscriber::fmt::Layer::default().with_writer(non_blocking)),
     );
@@ -40,6 +40,7 @@ async fn main() -> std::io::Result<()> {
             .service(user_controller::user_profile)
             .service(user_association_controller::user_associations)
             .service(user_association_controller::user_idp_associations)
+            .service(user_association_controller::create_user_and_init_idp_asso)
             .service(sms_config_controller::get_sms_config)
             .service(client_config_controller::create_client)
             .service(client_config_controller::client_config)

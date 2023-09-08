@@ -6,14 +6,11 @@ use serde_json::json;
 use crate::{
     common::{
         cache::{cache_get, cache_setex},
-        datasource::{tx_begin, tx_commit},
+        datasource::CONN,
         enums::IdpType,
         errors::Result,
     },
-    pojo::{
-        dto::user::{UserAssociationDTO, UserProfileDTO},
-        po::user::User,
-    },
+    pojo::{dto::user::UserAssociationDTO, po::user::User},
     repository::{
         user_association_repository::{self},
         user_repository::{self, select_profile},
@@ -39,7 +36,7 @@ pub async fn get_user(identifier: &str, is_openid: bool) -> Result<Option<User>>
                 cache_setex(
                     format!("{}{}", USER_PROFILE_CACHE_KEY, identifier).as_str(),
                     u.clone(),
-                    Duration::days(1),
+                    Duration::minutes(30),
                 )
                 .await?;
                 Ok(Some(u.clone()))
@@ -49,55 +46,23 @@ pub async fn get_user(identifier: &str, is_openid: bool) -> Result<Option<User>>
     }
 }
 
-pub async fn create_user(email: &str, associations: &mut Vec<UserAssociationDTO>) -> Result<User> {
-    let user = User::new(email);
-    let tx = tx_begin("create user").await?;
-
-    user_repository::save_user(&user).await?;
-    associations.push(UserAssociationDTO::new(
-        user.openid.clone(),
-        IdpType::FORUM,
-        json!(null),
-    ));
-
-    user_association_repository::batch_create_association(user.openid.as_str(), associations)
-        .await?;
-
-    tx_commit(tx, "create user").await?;
-    Ok(user)
-}
-
-pub async fn enstablish_idp_association(
+pub async fn create_user(
     email: &str,
-    association: &UserAssociationDTO,
-) -> Result<UserProfileDTO> {
-    if let Some(user) = &get_user(email, false).await? {
-        let tx = tx_begin("enstablish user association").await?;
-
-        let basic = user_association_repository::select_user_association(
-            &user.openid,
-            association.idp_type,
-            Some(association.idp_openid.to_string()),
-        )
+    association: Option<&UserAssociationDTO>,
+) -> Result<(User, Vec<UserAssociationDTO>)> {
+    let mut tx = CONN.begin().await.unwrap();
+    let user = User::new(email);
+    user_repository::save_user(&user).await?;
+    let mut inserted = vec![UserAssociationDTO::new(
+        user.openid.clone(),
+        IdpType::Forum,
+        json!(null),
+    )];
+    if let Some(asso) = association {
+        inserted.push(asso.clone());
+    };
+    user_association_repository::create_associations(tx.as_mut(), user.openid.as_str(), &inserted)
         .await?;
-
-        let mut user_with_association: UserProfileDTO = user.clone().into();
-        if let Some(uat) = basic {
-            user_with_association.associations.push(uat);
-        } else {
-            let mut associations = vec![association.clone()];
-            user_association_repository::batch_create_association(&user.openid, &mut associations)
-                .await?;
-            user_with_association.associations.push(association.clone());
-        }
-
-        tx_commit(tx, "enstablish user association").await?;
-        Ok(user_with_association)
-    } else {
-        let mut associations = vec![association.clone()];
-        let user = create_user(email, &mut associations).await?;
-        let mut user_profile: UserProfileDTO = user.into();
-        user_profile.associations.append(&mut associations);
-        Ok(user_profile)
-    }
+    tx.commit().await.unwrap();
+    Ok((user, inserted))
 }

@@ -17,6 +17,7 @@ use crate::{
 };
 
 #[utoipa::path(
+    operation_id = "创建 client",
     params(
         ClientConfigCreateForm
     ),
@@ -33,6 +34,7 @@ pub async fn create_client(
 }
 
 #[utoipa::path(
+    operation_id = "根据 client_id 查询 client 信息",
     params(
         ("client_id" = String, Path,),
     ),
@@ -48,6 +50,7 @@ pub async fn client_config(client_id: actix_web::web::Path<String>) -> Result<im
 }
 
 #[utoipa::path(
+    operation_id = "修改 client 配置",
     params(
         ClientConfigUpdateForm
     ),
@@ -66,6 +69,7 @@ pub async fn set_client_config(
 }
 
 #[utoipa::path(
+    operation_id = "查询指定 client 指定 idp 配置",
     params(
         ("client_id" = String, Path, ),
         ("idp_type" = IdpType, Path, )
@@ -85,6 +89,7 @@ pub async fn client_specify_idp_config(
 }
 
 #[utoipa::path(
+    operation_id = "查询指定 client idp 配置",
     params(
         ("client_id" = String, Path, )
     ),
@@ -102,6 +107,7 @@ pub async fn client_all_idp_config(client_id: Path<String>) -> Result<impl Respo
 }
 
 #[utoipa::path(
+    operation_id = "设置指定 client idp 配置",
     params(
         ("client_id" = IdpType, Path, )
     ),

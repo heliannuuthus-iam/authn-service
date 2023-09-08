@@ -9,8 +9,9 @@ use crate::{
 pub async fn save_user(user: &User) -> Result<()> {
     sqlx::query!(
         r#"
-            INSERT INTO t_user(avatar, username, gander, email, email_verified) VALUES(?, ?, ?, ?, ?)
+            INSERT INTO t_user(openid, avatar, username, gander, email, email_verified) VALUES(?, ?, ?, ?, ?, ?)
         "#,
+        user.openid,
         user.avatar,
         user.username,
         user.gander,
