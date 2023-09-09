@@ -17,7 +17,7 @@ use crate::{
         },
         po::{
             client::{ClientConfig, ClientIdpConfig},
-            sms_config::SmsConfig,
+            sms::SmsConfig,
             srp::SrpPassword,
             user::{User, UserAssociation},
         },
@@ -26,19 +26,20 @@ use crate::{
 #[derive(OpenApi)]
 #[openapi(
     paths(
+        password_controller::presist_srp,
+        password_controller::user_rsp,
+        user_controller::user_profile,
+        user_association_controller::user_associations,
+        user_association_controller::user_idp_associations,
+        user_association_controller::create_user_and_init_idp_asso,
+        sms_config_controller::get_sms_config,
+        sms_config_controller::set_sms_config,
         client_config_controller::create_client,
         client_config_controller::client_config,
         client_config_controller::set_client_config,
         client_config_controller::client_specify_idp_config,
         client_config_controller::client_all_idp_config,
         client_config_controller::set_client_idp_config,
-        sms_config_controller::get_sms_config,
-        user_association_controller::user_associations,
-        user_association_controller::user_idp_associations,
-        user_association_controller::create_user_and_init_idp_asso,
-        user_controller::user_rsp,
-        user_controller::user_profile,
-        password_controller::user_profile,
     ),
     components(schemas(
         ClientConfigCreateForm,

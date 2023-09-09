@@ -38,7 +38,6 @@
         "name": "description",
         "type_info": {
           "type": "Blob",
-<<<<<<< HEAD
           "flags": "NOT_NULL | BLOB | NO_DEFAULT_VALUE",
           "char_set": 224,
           "max_size": 262140
@@ -49,25 +48,10 @@
         "name": "redirect_url",
         "type_info": {
           "type": "Blob",
-=======
->>>>>>> 709b431 (client_idp_query)
           "flags": "BLOB",
           "char_set": 224,
           "max_size": 262140
         }
-<<<<<<< HEAD
-=======
-      },
-      {
-        "ordinal": 4,
-        "name": "redirect_url",
-        "type_info": {
-          "type": "Blob",
-          "flags": "BLOB",
-          "char_set": 224,
-          "max_size": 262140
-        }
->>>>>>> 709b431 (client_idp_query)
       }
     ],
     "parameters": {
@@ -77,11 +61,7 @@
       false,
       false,
       false,
-<<<<<<< HEAD
       false,
-=======
-      true,
->>>>>>> 709b431 (client_idp_query)
       true
     ]
   },

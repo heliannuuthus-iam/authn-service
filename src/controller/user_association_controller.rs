@@ -6,7 +6,7 @@ use actix_web::{
 use tracing::info;
 
 use crate::{
-    common::{errors::Result},
+    common::errors::Result,
     pojo::{dto::user::UserProfileDTO, form::user::UserAssoInitialForm},
     service::{user_association_service, user_service},
 };
@@ -51,9 +51,7 @@ pub async fn user_idp_associations(idp_openid: Path<String>) -> Result<impl Resp
 
 #[utoipa::path(
     operation_id = "创建用户关联关系, 用于 oauth 登录 + 注册",
-    params(
-        UserAssoInitialForm,
-    ),
+    request_body = UserAssoInitialForm,
     responses(
         (status = 200, description = "OK", body = UserProfileDTO),
     )

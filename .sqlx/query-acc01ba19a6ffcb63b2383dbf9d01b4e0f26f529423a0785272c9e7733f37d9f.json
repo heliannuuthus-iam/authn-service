@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO t_sms_config(name, template_id, template) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE name = ?, template = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "acc01ba19a6ffcb63b2383dbf9d01b4e0f26f529423a0785272c9e7733f37d9f"
+}

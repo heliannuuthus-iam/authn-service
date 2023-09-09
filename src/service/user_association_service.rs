@@ -2,7 +2,10 @@ use actix_web::error::ErrorNotFound;
 
 use super::user_service;
 use crate::{
-    common::{errors::{Result, ServiceError}, datasource::{CONN, acquire_conn}},
+    common::{
+        datasource::{tx_begin, tx_commit},
+        errors::{Result, ServiceError},
+    },
     pojo::dto::user::{UserAssociationDTO, UserProfileDTO},
     repository::user_association_repository,
 };
@@ -39,6 +42,8 @@ pub async fn enstablish_idp_association(
     openid: &str,
     association: &UserAssociationDTO,
 ) -> Result<Vec<UserAssociationDTO>> {
+    let mut tx = tx_begin("enstablish idp assos").await?;
+
     // table index determine to select instead of insert with duplicate error
     let mut associations = user_association_repository::select_user_associations(openid).await?;
     if associations
@@ -47,9 +52,14 @@ pub async fn enstablish_idp_association(
         .count()
         == 0
     {
-        user_association_repository::create_associations(&mut acquire_conn().await?, openid, &vec![association.clone()])
-            .await?;
+        user_association_repository::create_associations(
+            &mut tx,
+            openid,
+            &vec![association.clone()],
+        )
+        .await?;
         associations.push(association.clone());
     };
+    tx_commit(tx, "enstablish idp assos").await?;
     Ok(associations)
 }

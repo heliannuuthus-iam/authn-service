@@ -1,7 +1,7 @@
 use actix_web::error::ErrorNotFound;
 use anyhow::Context;
 use serde_json::json;
-use sqlx::{pool::PoolConnection, MySql, MySqlConnection, Pool, QueryBuilder};
+use sqlx::QueryBuilder;
 
 use crate::{
     common::{datasource::CONN, enums::IdpType, errors::Result},
@@ -63,7 +63,7 @@ pub async fn select_user_associations_by_idp_openid(
 }
 
 pub async fn create_associations(
-    tx: &mut PoolConnection<MySql>,
+    tx: &mut sqlx::Transaction<'_, sqlx::MySql>,
     openid: &str,
     associations: &Vec<UserAssociationDTO>,
 ) -> Result<()> {
@@ -78,7 +78,7 @@ pub async fn create_associations(
                 .push_bind(json!(assocition.idp_extra.clone()));
         })
         .build()
-        .execute(&*tx)
+        .execute(&mut **tx)
         .await
         .with_context(|| {
             let msg = format!("ceate user({openid}) association failed");

@@ -46,13 +46,13 @@ impl Patch for ClientConfigUpdateForm {
     }
 }
 
-impl Into<ClientConfig> for ClientConfigCreateForm {
-    fn into(self) -> ClientConfig {
+impl From<ClientConfigCreateForm> for ClientConfig {
+    fn from(val: ClientConfigCreateForm) -> Self {
         ClientConfig {
             client_id: gen_id(32),
-            name: self.name,
-            logo: self.logo,
-            description: self.desc,
+            name: val.name,
+            logo: val.logo,
+            description: val.desc,
             ..Default::default()
         }
     }
@@ -65,12 +65,12 @@ pub struct ClientIdpConfigSaveOrUpdateForm {
     pub idp_client_secret: String,
 }
 
-impl Into<ClientIdpConfig> for ClientIdpConfigSaveOrUpdateForm {
-    fn into(self) -> ClientIdpConfig {
+impl From<ClientIdpConfigSaveOrUpdateForm> for ClientIdpConfig {
+    fn from(val: ClientIdpConfigSaveOrUpdateForm) -> Self {
         ClientIdpConfig {
-            idp_client_id: self.idp_client_id,
-            idp_type: self.idp_type,
-            idp_client_secret: self.idp_client_secret,
+            idp_client_id: val.idp_client_id,
+            idp_type: val.idp_type,
+            idp_client_secret: val.idp_client_secret,
             ..Default::default()
         }
     }

@@ -1,21 +1,11 @@
 {
   "db_name": "MySQL",
-  "query": "SELECT openid, idp_openid, idp_type FROM t_user_association WHERE idp_openid = ?",
+  "query": "SELECT name, template_id, template FROM t_sms_config where template_id = ?",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
-        "name": "openid",
-        "type_info": {
-          "type": "VarString",
-          "flags": "NOT_NULL | MULTIPLE_KEY | NO_DEFAULT_VALUE",
-          "char_set": 224,
-          "max_size": 88
-        }
-      },
-      {
-        "ordinal": 1,
-        "name": "idp_openid",
+        "name": "name",
         "type_info": {
           "type": "VarString",
           "flags": "NOT_NULL | NO_DEFAULT_VALUE",
@@ -24,13 +14,23 @@
         }
       },
       {
-        "ordinal": 2,
-        "name": "idp_type",
+        "ordinal": 1,
+        "name": "template_id",
         "type_info": {
           "type": "VarString",
           "flags": "NOT_NULL | NO_DEFAULT_VALUE",
           "char_set": 224,
-          "max_size": 64
+          "max_size": 128
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "template",
+        "type_info": {
+          "type": "Blob",
+          "flags": "NOT_NULL | BLOB | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 262140
         }
       }
     ],
@@ -43,5 +43,5 @@
       false
     ]
   },
-  "hash": "41ed451fee4e1d6484d23a3a16876819384c722898b85b0a16187fa7f45012a1"
+  "hash": "78ceaec678897327345bef0af2b2c58f35e980105fa5dd53276a404b933cb7ab"
 }

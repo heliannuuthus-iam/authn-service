@@ -30,11 +30,7 @@
           "type": "VarString",
           "flags": "NOT_NULL | NO_DEFAULT_VALUE",
           "char_set": 224,
-<<<<<<< HEAD
           "max_size": 128
-=======
-          "max_size": 320
->>>>>>> 709b431 (client_idp_query)
         }
       }
     ],

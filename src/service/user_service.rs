@@ -61,7 +61,7 @@ pub async fn create_user(
     if let Some(asso) = association {
         inserted.push(asso.clone());
     };
-    user_association_repository::create_associations(tx.as_mut(), user.openid.as_str(), &inserted)
+    user_association_repository::create_associations(&mut tx, user.openid.as_str(), &inserted)
         .await?;
     tx.commit().await.unwrap();
     Ok((user, inserted))

@@ -1,8 +1,8 @@
 use actix_web::{App, HttpServer};
 use common::config::env_var;
 use controller::{
-    client_config_controller, sms_config_controller, user_association_controller, user_controller,
-    ApiDoc,
+    client_config_controller, password_controller, sms_config_controller,
+    user_association_controller, user_controller, ApiDoc,
 };
 use dotenvy::dotenv;
 use tracing_actix_web::TracingLogger;
@@ -36,15 +36,14 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(TracingLogger::default())
             .service(Redoc::with_url("/openapi", api_doc.clone()))
-            .service(user_controller::user_rsp)
+            .service(password_controller::presist_srp)
+            .service(password_controller::user_rsp)
             .service(user_controller::user_profile)
             .service(user_association_controller::user_associations)
             .service(user_association_controller::user_idp_associations)
-<<<<<<< HEAD
             .service(user_association_controller::create_user_and_init_idp_asso)
-=======
->>>>>>> 709b431 (client_idp_query)
             .service(sms_config_controller::get_sms_config)
+            .service(sms_config_controller::set_sms_config)
             .service(client_config_controller::create_client)
             .service(client_config_controller::client_config)
             .service(client_config_controller::set_client_config)

@@ -34,8 +34,8 @@ impl From<User> for UserProfileDTO {
 pub struct UserAssociationDTO {
     pub idp_openid: String,
     pub idp_type: IdpType,
-    #[serde(default, skip_serializing_if = "sqlx::types::JsonValue::is_null")]
-    pub idp_extra: sqlx::types::JsonValue,
+    #[serde(default, skip_serializing_if = "serde_json::Value::is_null")]
+    pub idp_extra: serde_json::Value,
 }
 
 impl UserAssociationDTO {

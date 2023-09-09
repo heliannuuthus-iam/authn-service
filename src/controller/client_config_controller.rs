@@ -18,9 +18,7 @@ use crate::{
 
 #[utoipa::path(
     operation_id = "创建 client",
-    params(
-        ClientConfigCreateForm
-    ),
+   request_body = ClientConfigCreateForm,
     responses(
         (status = 200, description = "OK"),
     )
@@ -51,9 +49,7 @@ pub async fn client_config(client_id: actix_web::web::Path<String>) -> Result<im
 
 #[utoipa::path(
     operation_id = "修改 client 配置",
-    params(
-        ClientConfigUpdateForm
-    ),
+    request_body = ClientConfigUpdateForm,
     responses(
         (status = 200, description = "OK"),
     )

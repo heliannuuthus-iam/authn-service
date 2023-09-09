@@ -5,9 +5,9 @@ use chrono::Duration;
 use lazy_static::lazy_static;
 use serde::{ser::SerializeSeq, Deserialize};
 use sqlx::{
-    mysql::{MySqlConnectOptions, MySqlPoolOptions, MySqlTransactionManager},
+    mysql::{MySqlConnectOptions, MySqlPoolOptions},
     pool::PoolConnection,
-    Acquire, ConnectOptions, MySql, MySqlConnection, Pool,
+    ConnectOptions, MySql, Pool,
 };
 
 use super::errors::ServiceError;
@@ -26,6 +26,14 @@ lazy_static! {
                     .log_statements(tracing::log::LevelFilter::Debug),
             )
     };
+}
+
+pub async fn acquire_conn() -> Result<PoolConnection<MySql>, ServiceError> {
+    Ok(CONN.acquire().await.with_context(|| {
+        let msg = format!("acquire mysql connection failed");
+        tracing::error!(msg);
+        msg
+    })?)
 }
 
 pub async fn tx_begin(action: &str) -> Result<sqlx::Transaction<'_, MySql>, ServiceError> {

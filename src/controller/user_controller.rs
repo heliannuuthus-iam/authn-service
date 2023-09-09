@@ -1,16 +1,14 @@
 use actix_web::{
     error::ErrorNotFound,
-    get, post,
-    web::{Form, Json, Path},
-    HttpResponse, Responder,
+    get,
+    web::{Json, Path},
+    Responder,
 };
 use tracing::info;
 
 use crate::{
     common::errors::{Result, ServiceError},
-    pojo::form::user::RegistryForm,
-    repository::password_repository::{save_srp, select_srp},
-    service::user_service::get_user,
+    service::user_service::{self},
 };
 
 #[utoipa::path(
