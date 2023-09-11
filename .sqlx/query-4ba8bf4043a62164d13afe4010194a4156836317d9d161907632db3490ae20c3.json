@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            INSERT INTO t_user(openid, avatar, username, gander, email, email_verified) VALUES(?, ?, ?, ?, ?, ?)\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": []
+  },
+  "hash": "4ba8bf4043a62164d13afe4010194a4156836317d9d161907632db3490ae20c3"
+}

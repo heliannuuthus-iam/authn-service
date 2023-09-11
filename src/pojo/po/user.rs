@@ -2,57 +2,37 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use crate::common::enums::IdpType;
-#[derive(Serialize, Deserialize, Clone, sqlx::FromRow, ToSchema)]
+use crate::common::{config::env_var_default, enums::IdpType, utils::gen_id};
+#[derive(Serialize, Deserialize, Clone, sqlx::FromRow, Default, ToSchema)]
 pub struct User {
-    #[serde(rename = "id")]
-    pub id: i64,
-
-    #[serde(rename = "openid")]
     pub openid: String,
-
-    #[serde(rename = "avatar")]
     pub avatar: String,
-
-    #[serde(rename = "username")]
     pub username: String,
-
-    #[serde(rename = "gander")]
     pub gander: String,
-
-    #[serde(rename = "email")]
     pub email: String,
-
-    #[serde(rename = "email_verified")]
     pub email_verified: bool,
-
-    #[serde(rename = "registered_at")]
-    pub registered_at: DateTime<Utc>,
-
-    #[serde(rename = "updated_at")]
-    pub updated_at: DateTime<Utc>,
-
-    #[serde(rename = "created_at")]
-    pub created_at: DateTime<Utc>,
+    pub registried_at: DateTime<Utc>,
 }
 
-#[derive(Serialize, Deserialize, Clone, ToSchema)]
+impl User {
+    pub fn new(email: &str) -> Self {
+        User {
+            openid: gen_id(22),
+            username: gen_id(32),
+            email: email.to_string(),
+            avatar: env_var_default::<String>(
+                "DEFAULT_IMAGE",
+                String::from("https://docs.rs/-/rustdoc.static/rust-logo-151179464ae7ed46.svg"),
+            ),
+            ..Default::default()
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, sqlx::FromRow, Clone, ToSchema)]
 pub struct UserAssociation {
-    #[serde(rename = "id")]
-    pub id: i64,
-
-    #[serde(rename = "openid")]
     pub openid: String,
-
-    #[serde(rename = "idp_openid")]
     pub idp_openid: String,
-
-    #[serde(rename = "idp_type")]
     pub idp_type: IdpType,
-
-    #[serde(rename = "updated_at")]
-    pub updated_at: DateTime<Utc>,
-
-    #[serde(rename = "created_at")]
-    pub created_at: DateTime<Utc>,
+    pub idp_extra: serde_json::Value,
 }

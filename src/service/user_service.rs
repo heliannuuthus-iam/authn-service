@@ -1,64 +1,68 @@
-use anyhow::Context;
+use std::vec;
+
 use chrono::Duration;
+use serde_json::json;
 
 use crate::{
     common::{
         cache::{cache_get, cache_setex},
-        errors::{Result, ServiceError},
+        datasource::CONN,
+        enums::IdpType,
+        errors::Result,
     },
-    pojo::{
-        dto::user::{UserAssociationDTO, UserProfileDTO},
-        po::user::User,
-    },
+    pojo::{dto::user::UserAssociationDTO, po::user::User},
     repository::{
-        user_association_repository::{
-            select_user_associations, select_user_associations_by_idp_openid,
-        },
-        user_repository::select_profile,
+        user_association_repository::{self},
+        user_repository::{self, select_profile},
     },
 };
 
 const USER_PROFILE_CACHE_KEY: &str = "forum:user:profile:";
 
-pub async fn get_user(openid: &str) -> Result<User> {
+pub async fn get_user(identifier: &str, is_openid: bool) -> Result<Option<User>> {
     if let Some(u) =
-        cache_get::<User>(format!("{}{}", USER_PROFILE_CACHE_KEY, openid).as_str()).await?
+        cache_get::<User>(format!("{}{}", USER_PROFILE_CACHE_KEY, identifier).as_str()).await?
     {
-        Ok(u)
+        Ok(Some(u))
     } else {
-        let user = select_profile(Some(openid.to_string()), None)
-            .await
-            .and_then(|u| u.ok_or(ServiceError::NotFount(String::from("user not found"))))?;
-
-        cache_setex(
-            format!("{}{}", USER_PROFILE_CACHE_KEY, openid).as_str(),
-            user.clone(),
-            Duration::days(1),
-        )
-        .await?;
-
-        Ok(user)
+        match if is_openid {
+            select_profile(Some(identifier.to_string()), None)
+        } else {
+            select_profile(None, Some(identifier.to_string()))
+        }
+        .await?
+        {
+            Some(ref u) => {
+                cache_setex(
+                    format!("{}{}", USER_PROFILE_CACHE_KEY, identifier).as_str(),
+                    u.clone(),
+                    Duration::minutes(30),
+                )
+                .await?;
+                Ok(Some(u.clone()))
+            }
+            None => Ok(None),
+        }
     }
 }
 
-pub async fn get_profile_by_idp_openid(idp_openid: &str) -> Result<UserProfileDTO> {
-    let (openid, associations): (String, Vec<UserAssociationDTO>) =
-        select_user_associations_by_idp_openid(idp_openid).await?;
-    let mut user = UserProfileDTO::from(get_user(&openid).await?);
-    user.associations = associations;
-    Ok(user)
-}
-
-pub async fn get_profile_with_associations(openid: &str) -> Result<UserProfileDTO> {
-    let user = get_user(openid).await?;
-    let user_profile = select_user_associations(&user.openid)
-        .await
-        .map(|associations| {
-            let mut user = UserProfileDTO::from(user);
-            user.associations = associations;
-            user
-        })
-        .context(format!("get user({openid}) association failed"))?;
-
-    Ok(user_profile)
+pub async fn create_user(
+    email: &str,
+    association: Option<&UserAssociationDTO>,
+) -> Result<(User, Vec<UserAssociationDTO>)> {
+    let mut tx = CONN.begin().await.unwrap();
+    let user = User::new(email);
+    user_repository::save_user(&user).await?;
+    let mut inserted = vec![UserAssociationDTO::new(
+        user.openid.clone(),
+        IdpType::Forum,
+        json!(null),
+    )];
+    if let Some(asso) = association {
+        inserted.push(asso.clone());
+    };
+    user_association_repository::create_associations(&mut tx, user.openid.as_str(), &inserted)
+        .await?;
+    tx.commit().await.unwrap();
+    Ok((user, inserted))
 }

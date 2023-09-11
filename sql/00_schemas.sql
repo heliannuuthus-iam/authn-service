@@ -184,36 +184,52 @@ CREATE DATABASE IF NOT EXISTS forum;
 use forum;
 CREATE TABLE IF NOT EXISTS t_user (
   id BIGINT(22) AUTO_INCREMENT NOT NULL,
-  openid VARCHAR(22) NOT NULL,
+  openid VARCHAR(24) NOT NULL,
   avatar TEXT NOT NULL,
   username VARCHAR(255) NOT NULL,
   gander VARCHAR(16) NOT NULL DEFAULT 'Unknown',
   email VARCHAR(255) NOT NULL,
   email_verified BOOL NOT NULL DEFAULT true,
   status TINYINT(2) NOT NULL DEFAULT 1,
-  registerd_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  registried_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(id),
-  UNIQUE uniq_openid(openid) UNIQUE uniq_email(email)
+  UNIQUE uniq_openid(openid),
+  UNIQUE uniq_email(email)
 );
 CREATE TABLE IF NOT EXISTS t_user_association (
   id BIGINT(22) AUTO_INCREMENT NOT NULL,
-  openid VARCHAR(22) NOT NULL,
+  openid VARCHAR(24) NOT NULL,
   idp_openid VARCHAR(255) NOT NULL,
   idp_type VARCHAR(16) NOT NULL,
+  idp_extra JSON,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(id),
-  UNIQUE uniq_openid(openid)
+  INDEX index_openid(openid),
+  UNIQUE uniq_open_id_idp_type(open_id, idp_type),
 );
 CREATE TABLE IF NOT EXISTS t_sms_config (
   id BIGINT(22) AUTO_INCREMENT NOT NULL,
-  name VARCHAR(255) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  template_id VARCHAR(32) NOT NULL,
   template TEXT NOT NULL,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY(id)
+  PRIMARY KEY(id),
+  UNIQUE uniq_template(template_id)
+);
+CREATE TABLE IF NOT EXISTS t_challenge_config (
+  id BIGINT(22) AUTO_INCREMENT NOT NULL,
+  client_id VARCHAR(24) NOT NULL,
+  `name` VARCHAR(32) NOT NULL,
+  `type` VARCHAR(32) NOT NULL,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(id),
+  INDEX idx_client(client_id),
+  UNIQUE uniq_name_type(name, type)
 );
 -- https://datatracker.ietf.org/doc/html/rfc2945
 CREATE TABLE IF NOT EXISTS t_srp_password (
@@ -228,10 +244,10 @@ CREATE TABLE IF NOT EXISTS t_srp_password (
 );
 CREATE TABLE IF NOT EXISTS t_client_config (
   id BIGINT(22) AUTO_INCREMENT NOT NULL,
-  client_id varchar(32) NOT NULL,
+  client_id varchar(24) NOT NULL,
   name varchar(128) NOT NULL,
   logo text NOT NULL,
-  description text NOT NULL,
+  description text,
   redirect_url text,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -240,14 +256,14 @@ CREATE TABLE IF NOT EXISTS t_client_config (
 );
 CREATE TABLE IF NOT EXISTS t_client_idp_config (
   id BIGINT(22) AUTO_INCREMENT NOT NULL,
-  client_id varchar(32) NOT NULL,
+  client_id varchar(24) NOT NULL,
   idp_type varchar(32) NOT NULL,
   idp_client_id varchar(255) NOT NULL,
   idp_client_secret varchar(4096) NOT NULL,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(id),
-  UNIQUE uniq_client_id(client_id),
+  INDEX index_client_id(client_id),
   UNIQUE uniq_idp_type_client_id(client_id, idp_type, idp_client_id),
 );
 GRANT ALL PRIVILEGES ON *.* TO 'forum' @'%';

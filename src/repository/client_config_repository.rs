@@ -8,7 +8,8 @@ use crate::{
 pub async fn select_client_config(client_id: &str) -> Result<Option<ClientConfig>> {
     Ok(sqlx::query_as!(
         ClientConfig,
-        "SELECT * FROM t_client_config WHERE client_id = ?",
+        "SELECT client_id, name, logo, description, redirect_url FROM t_client_config WHERE \
+         client_id = ?",
         client_id
     )
     .fetch_optional(&*CONN)

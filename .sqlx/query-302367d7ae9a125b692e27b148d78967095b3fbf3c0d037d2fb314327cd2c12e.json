@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO t_client_idp_config(client_id, idp_type, idp_client_id, idp_client_secret) VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE idp_client_secret = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "302367d7ae9a125b692e27b148d78967095b3fbf3c0d037d2fb314327cd2c12e"
+}
