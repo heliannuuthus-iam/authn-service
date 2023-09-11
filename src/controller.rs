@@ -1,8 +1,10 @@
+pub mod challenge_config_controller;
 pub mod client_config_controller;
 pub mod password_controller;
 pub mod sms_config_controller;
 pub mod user_association_controller;
 pub mod user_controller;
+
 use utoipa::OpenApi;
 
 use crate::{
@@ -16,6 +18,7 @@ use crate::{
             user::{SrpPasswordForm, UserAssoInitialForm},
         },
         po::{
+            challenge::ChallengeCofig,
             client::{ClientConfig, ClientIdpConfig},
             sms::SmsConfig,
             srp::SrpPassword,
@@ -34,6 +37,8 @@ use crate::{
         user_association_controller::create_user_and_init_idp_asso,
         sms_config_controller::get_sms_config,
         sms_config_controller::set_sms_config,
+        challenge_config_controller::list_challenge_config,
+        challenge_config_controller::set_challenge_config,
         client_config_controller::create_client,
         client_config_controller::client_config,
         client_config_controller::set_client_config,
@@ -49,6 +54,7 @@ use crate::{
         ClientConfig,
         ClientIdpConfig,
         SmsConfig,
+        ChallengeCofig,
         UserAssociation,
         UserAssociationDTO,
         UserAssoInitialForm,

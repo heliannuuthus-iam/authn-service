@@ -229,7 +229,7 @@ CREATE TABLE IF NOT EXISTS t_challenge_config (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(id),
   INDEX idx_client(client_id),
-  UNIQUE uniq_name_type(name, type)
+  UNIQUE uniq_client_name_type(client_id, name, type)
 );
 -- https://datatracker.ietf.org/doc/html/rfc2945
 CREATE TABLE IF NOT EXISTS t_srp_password (
