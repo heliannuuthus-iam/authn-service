@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO t_challenge_config(client_id, name, type) VALUES(?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "8a1aad32bdfc3242693e1a4b4f54bb727b360d356c124e76940a9254c00079a5"
+}

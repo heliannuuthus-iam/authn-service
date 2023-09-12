@@ -1,8 +1,8 @@
 use actix_web::{App, HttpServer};
 use common::config::env_var;
 use controller::{
-    client_config_controller, password_controller, sms_config_controller,
-    user_association_controller, user_controller, ApiDoc,
+    challenge_config_controller, client_config_controller, password_controller,
+    sms_config_controller, user_association_controller, user_controller, ApiDoc,
 };
 use dotenvy::dotenv;
 use tracing_actix_web::TracingLogger;
@@ -44,6 +44,8 @@ async fn main() -> std::io::Result<()> {
             .service(user_association_controller::create_user_and_init_idp_asso)
             .service(sms_config_controller::get_sms_config)
             .service(sms_config_controller::set_sms_config)
+            .service(challenge_config_controller::list_challenge_config)
+            .service(challenge_config_controller::set_challenge_config)
             .service(client_config_controller::create_client)
             .service(client_config_controller::client_config)
             .service(client_config_controller::set_client_config)

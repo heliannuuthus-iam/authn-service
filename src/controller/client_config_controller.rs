@@ -18,7 +18,7 @@ use crate::{
 
 #[utoipa::path(
     operation_id = "创建 client",
-   request_body = ClientConfigCreateForm,
+    request_body = ClientConfigCreateForm,
     responses(
         (status = 200, description = "OK"),
     )
