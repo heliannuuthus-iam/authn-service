@@ -266,4 +266,24 @@ CREATE TABLE IF NOT EXISTS t_client_idp_config (
   INDEX index_client_id(client_id),
   UNIQUE uniq_idp_type_client_id(client_id, idp_type, idp_client_id),
 );
+CREATE TABLE IF NOT EXISTS t_service_config (
+    id BIGINT(22) AUTO_INCREMENT NOT NULL,
+    service_id varchar(24) NOT NULL,
+    name varchar(128) NOT NULL,
+    logo text NOT NULL,
+    description text,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(id),
+    UNIQUE uniq_service_id(service_id),
+);
+CREATE TABLE IF NOT EXISTS t_service_scope (
+    id BIGINT(22) AUTO_INCREMENT NOT NULL,
+    service_id varchar(24) NOT NULL,
+    scope varchar(16) NOT NULL,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(id),
+    UNIQUE uniq_service_id_scope(service_id, scope),
+);
 GRANT ALL PRIVILEGES ON *.* TO 'forum' @'%';

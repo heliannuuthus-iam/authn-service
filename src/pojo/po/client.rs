@@ -15,7 +15,6 @@ pub struct ClientConfig {
 
 #[derive(Serialize, Deserialize, Default, sqlx::FromRow, ToSchema)]
 pub struct ClientIdpConfig {
-    pub client_id: String,
     pub idp_type: IdpType,
     pub idp_client_id: String,
     pub idp_client_secret: String,

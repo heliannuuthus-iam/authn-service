@@ -79,7 +79,7 @@ pub async fn client_specify_idp_config(
     path_params: Path<(String, IdpType)>,
 ) -> Result<impl Responder> {
     let (client_id, idp_type) = path_params.into_inner();
-    client_idp_config_repository::select_spcify_idp_config(&client_id, idp_type)
+    client_idp_config_repository::select_specify_idp_config(&client_id, idp_type)
         .await
         .map(Json)
 }

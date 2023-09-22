@@ -1,4 +1,4 @@
-pub mod challenge_config_respository;
+pub mod challenge_config_repository;
 pub mod client_config_repository;
 pub mod client_idp_config_repository;
 pub mod password_repository;

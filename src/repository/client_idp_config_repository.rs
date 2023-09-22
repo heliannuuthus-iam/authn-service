@@ -5,7 +5,7 @@ use crate::{
     pojo::po::client::ClientIdpConfig,
 };
 
-pub async fn select_spcify_idp_config(
+pub async fn select_specify_idp_config(
     client_id: &str,
     idp_type: IdpType,
 ) -> Result<Option<ClientIdpConfig>> {
@@ -16,29 +16,29 @@ pub async fn select_spcify_idp_config(
         client_id,
         idp_type
     )
-    .fetch_optional(&*CONN)
-    .await
-    .with_context(|| {
-        let msg = format!("fetch specify idp config failed");
-        tracing::error!(msg);
-        msg
-    })?)
+        .fetch_optional(&*CONN)
+        .await
+        .with_context(|| {
+            let msg = format!("fetch specify idp config failed");
+            tracing::error!(msg);
+            msg
+        })?)
 }
 
 pub async fn select_client_idp_config(client_id: &str) -> Result<Vec<ClientIdpConfig>> {
     Ok(sqlx::query_as!(
         ClientIdpConfig,
-        "SELECT client_id, idp_type, idp_client_id, idp_client_secret FROM t_client_idp_config \
+        "SELECT idp_type, idp_client_id, idp_client_secret FROM t_client_idp_config \
          WHERE client_id = ?",
         client_id
     )
-    .fetch_all(&*CONN)
-    .await
-    .with_context(|| {
-        let msg = format!("fetch specify idp config failed");
-        tracing::error!(msg);
-        msg
-    })?)
+        .fetch_all(&*CONN)
+        .await
+        .with_context(|| {
+            let msg = format!("fetch specify idp config failed");
+            tracing::error!(msg);
+            msg
+        })?)
 }
 
 pub async fn save_or_update_client_idp_config(idp_config: &ClientIdpConfig) -> Result<()> {
@@ -51,12 +51,12 @@ pub async fn save_or_update_client_idp_config(idp_config: &ClientIdpConfig) -> R
         idp_config.idp_client_secret,
         idp_config.idp_client_secret,
     )
-    .execute(&*CONN)
-    .await
-    .with_context(|| {
-        let msg = format!("fetch specify idp config failed");
-        tracing::error!(msg);
-        msg
-    })?;
+        .execute(&*CONN)
+        .await
+        .with_context(|| {
+            let msg = format!("fetch specify idp config failed");
+            tracing::error!(msg);
+            msg
+        })?;
     Ok(())
 }
