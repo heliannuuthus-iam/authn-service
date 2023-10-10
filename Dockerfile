@@ -2,6 +2,6 @@ FROM rust:latest
 
 WORKDIR /app
 
-COPY target/release/haauth-server .
+COPY target/release/ha-auth-server .
 
-CMD ["./haauth-server"]
+CMD ["./ha-auth-server"]
