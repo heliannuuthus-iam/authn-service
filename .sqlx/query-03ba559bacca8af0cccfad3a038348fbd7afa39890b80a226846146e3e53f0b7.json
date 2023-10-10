@@ -1,0 +1,47 @@
+{
+  "db_name": "MySQL",
+  "query": "SELECT idp_type, idp_client_id, idp_client_secret FROM t_client_idp_config WHERE client_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "idp_type",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 128
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "idp_client_id",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 1020
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "idp_client_secret",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 16384
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "03ba559bacca8af0cccfad3a038348fbd7afa39890b80a226846146e3e53f0b7"
+}

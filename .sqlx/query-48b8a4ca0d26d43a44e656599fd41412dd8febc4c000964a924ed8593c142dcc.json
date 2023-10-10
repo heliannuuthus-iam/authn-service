@@ -1,0 +1,58 @@
+{
+  "db_name": "MySQL",
+  "query": "SELECT client_id, name, logo, description FROM t_client WHERE client_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "client_id",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | UNIQUE_KEY | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 96
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 512
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "logo",
+        "type_info": {
+          "type": "Blob",
+          "flags": "NOT_NULL | BLOB | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 262140
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "description",
+        "type_info": {
+          "type": "Blob",
+          "flags": "BLOB",
+          "char_set": 224,
+          "max_size": 262140
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "48b8a4ca0d26d43a44e656599fd41412dd8febc4c000964a924ed8593c142dcc"
+}
