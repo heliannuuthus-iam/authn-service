@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO t_client_setting(client_id, callbacks, allowed_origins, allowed_logout_urls) VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE callbacks = ?, allowed_origins = ?, allowed_logout_urls = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 7
+    },
+    "nullable": []
+  },
+  "hash": "ed30a8fd7ba441c10d0eeb8d43a9c317f136ee025272c5d7cb44ea25ccd5fadb"
+}

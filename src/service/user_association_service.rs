@@ -19,7 +19,7 @@ pub async fn get_profile_by_idp_openid(idp_openid: &str) -> Result<UserProfileDT
             user.associations = associations.clone();
             Ok(user)
         }
-        None => Err(ServiceError::ReponseError(ErrorNotFound("user not fount"))),
+        None => Err(ServiceError::Reponse(ErrorNotFound("user not fount"))),
     }
 }
 
@@ -34,7 +34,7 @@ pub async fn get_profile_with_associations(openid: &str) -> Result<UserProfileDT
                     user
                 })?,
         ),
-        None => Err(ServiceError::ReponseError(ErrorNotFound("user not fount"))),
+        None => Err(ServiceError::Reponse(ErrorNotFound("user not fount"))),
     }
 }
 

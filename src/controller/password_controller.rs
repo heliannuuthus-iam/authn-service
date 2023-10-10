@@ -42,10 +42,6 @@ pub async fn user_rsp(identifier: Path<String>) -> Result<impl Responder> {
     tracing::info!("{} 获取 srp 信息", desensitize_text(&identifier));
     password_repository::select_srp(&identifier)
         .await
-        .and_then(|srp| {
-            srp.ok_or(ServiceError::ReponseError(ErrorNotFound(format!(
-                "select srp failed"
-            ))))
-        })
+        .and_then(|srp| srp.ok_or(ServiceError::Reponse(ErrorNotFound("select srp failed"))))
         .map(Json)
 }

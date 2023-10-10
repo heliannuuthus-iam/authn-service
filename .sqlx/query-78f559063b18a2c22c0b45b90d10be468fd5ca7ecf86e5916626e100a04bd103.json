@@ -1,46 +1,46 @@
 {
   "db_name": "MySQL",
-  "query": "SELECT client_id, idp_type, idp_client_id, idp_client_secret FROM t_client_idp_config WHERE client_id = ?",
+  "query": "SELECT server_id, name, logo, description FROM t_server WHERE server_id = ?",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
-        "name": "client_id",
+        "name": "server_id",
         "type_info": {
           "type": "VarString",
-          "flags": "NOT_NULL | UNIQUE_KEY | MULTIPLE_KEY | NO_DEFAULT_VALUE",
+          "flags": "NOT_NULL | UNIQUE_KEY | NO_DEFAULT_VALUE",
           "char_set": 224,
           "max_size": 128
         }
       },
       {
         "ordinal": 1,
-        "name": "idp_type",
+        "name": "name",
         "type_info": {
           "type": "VarString",
           "flags": "NOT_NULL | NO_DEFAULT_VALUE",
           "char_set": 224,
-          "max_size": 128
+          "max_size": 512
         }
       },
       {
         "ordinal": 2,
-        "name": "idp_client_id",
+        "name": "logo",
         "type_info": {
-          "type": "VarString",
-          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "type": "Blob",
+          "flags": "NOT_NULL | BLOB | NO_DEFAULT_VALUE",
           "char_set": 224,
-          "max_size": 1020
+          "max_size": 262140
         }
       },
       {
         "ordinal": 3,
-        "name": "idp_client_secret",
+        "name": "description",
         "type_info": {
-          "type": "VarString",
-          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "type": "Blob",
+          "flags": "BLOB",
           "char_set": 224,
-          "max_size": 16384
+          "max_size": 262140
         }
       }
     ],
@@ -51,8 +51,8 @@
       false,
       false,
       false,
-      false
+      true
     ]
   },
-  "hash": "c20aa952b1a1d3d2f1737a1ccfc234c9a1938904d6c301fe3baa101c2832018f"
+  "hash": "78f559063b18a2c22c0b45b90d10be468fd5ca7ecf86e5916626e100a04bd103"
 }

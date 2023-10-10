@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO t_server(server_id, name, logo, description) VALUES(?, ?, ? ,?) ON DUPLICATE KEY UPDATE name = ?, logo = ?, description = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 7
+    },
+    "nullable": []
+  },
+  "hash": "2d56cbe42b7c55ea7e5caf702e4a83f7ae8f96478a39d9dea0050a9d10f512b2"
+}

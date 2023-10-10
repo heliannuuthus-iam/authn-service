@@ -1,6 +1,6 @@
 {
   "db_name": "MySQL",
-  "query": "SELECT client_id, name, logo, description, redirect_url FROM t_client_config WHERE client_id = ?",
+  "query": "SELECT client_id, name, logo, description, client_type FROM t_client WHERE client_id = ?",
   "describe": {
     "columns": [
       {
@@ -38,19 +38,19 @@
         "name": "description",
         "type_info": {
           "type": "Blob",
-          "flags": "NOT_NULL | BLOB | NO_DEFAULT_VALUE",
+          "flags": "BLOB",
           "char_set": 224,
           "max_size": 262140
         }
       },
       {
         "ordinal": 4,
-        "name": "redirect_url",
+        "name": "client_type",
         "type_info": {
-          "type": "Blob",
-          "flags": "BLOB",
-          "char_set": 224,
-          "max_size": 262140
+          "type": "Tiny",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 63,
+          "max_size": 2
         }
       }
     ],
@@ -61,9 +61,9 @@
       false,
       false,
       false,
-      false,
-      true
+      true,
+      false
     ]
   },
-  "hash": "d2262e25ed2a2dc35a582fed0d45643493adb54ac769b9e6b6fb926ea78398bc"
+  "hash": "a91bd0680fdac1f21c2a360ea835bcd2e90205f1855b186c9c89731d49738272"
 }

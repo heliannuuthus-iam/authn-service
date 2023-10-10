@@ -55,7 +55,7 @@ pub async fn create_user(
     user_repository::save_user(&user).await?;
     let mut inserted = vec![UserAssociationDTO::new(
         user.openid.clone(),
-        IdpType::Forum,
+        IdpType::User,
         json!(null),
     )];
     if let Some(asso) = association {

@@ -6,7 +6,7 @@ use actix_web::{
 
 use crate::{
     common::errors::Result, pojo::po::challenge::ChallengeCofig,
-    repository::challenge_config_respository,
+    repository::challenge_config_repository,
 };
 
 #[utoipa::path(
@@ -20,7 +20,7 @@ use crate::{
 )]
 #[get("/config/challenge/{client_id}")]
 pub async fn list_challenge_config(client_id: Path<String>) -> Result<impl Responder> {
-    challenge_config_respository::select_challenge_configs(&client_id.into_inner())
+    challenge_config_repository::select_challenge_configs(&client_id.into_inner())
         .await
         .map(Json)
 }
@@ -34,6 +34,6 @@ pub async fn list_challenge_config(client_id: Path<String>) -> Result<impl Respo
 )]
 #[post("/config/challenge")]
 pub async fn set_challenge_config(Json(config): Json<ChallengeCofig>) -> Result<impl Responder> {
-    challenge_config_respository::save_challenge_config(&config).await?;
+    challenge_config_repository::save_challenge_config(&config).await?;
     Ok(HttpResponse::Ok().finish())
 }

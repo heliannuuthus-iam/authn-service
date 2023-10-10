@@ -31,8 +31,8 @@ services:
       retries: 10
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=forum
-      - MYSQL_PASSWORD=forum
+      - MYSQL_USER=haauth
+      - MYSQL_PASSWORD=haauth
       - MYSQL_DATABASE=nacos_config
     command: |
       --collation-server=utf8mb4_general_ci
@@ -65,8 +65,8 @@ services:
       - SPRING_DATASOURCE_PLATFORM=mysql
       - MYSQL_SERVICE_HOST=mysql
       - MYSQL_SERVICE_PORT=3306
-      - MYSQL_SERVICE_USER=forum
-      - MYSQL_SERVICE_PASSWORD=forum
+      - MYSQL_SERVICE_USER=haauth
+      - MYSQL_SERVICE_PASSWORD=haauth
       - MYSQL_SERVICE_DB_NAME=nacos_config
       - MYSQL_SERVICE_DB_PARAM=characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
       - JVM_XMS=512m

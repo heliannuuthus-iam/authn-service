@@ -2,6 +2,6 @@ FROM rust:latest
 
 WORKDIR /app
 
-COPY target/release/forum-server .
+COPY target/release/ha-auth-server .
 
-CMD ["./forum-server"]
+CMD ["./ha-auth-server"]

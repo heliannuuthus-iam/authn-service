@@ -1,6 +1,8 @@
 pub mod challenge_config_controller;
-pub mod client_config_controller;
+pub mod client_controller;
+pub mod idp_controller;
 pub mod password_controller;
+pub mod server_controller;
 pub mod sms_config_controller;
 pub mod user_association_controller;
 pub mod user_controller;
@@ -8,18 +10,20 @@ pub mod user_controller;
 use utoipa::OpenApi;
 
 use crate::{
-    common::enums::IdpType,
+    common::enums::{ClientType, IdpType},
     pojo::{
         dto::user::{UserAssociationDTO, UserProfileDTO},
         form::{
             client::{
-                ClientConfigCreateForm, ClientConfigUpdateForm, ClientIdpConfigSaveOrUpdateForm,
+                ClientIdpConfigSaveOrUpdateForm, ClientSettingCreateForm, ClientSettingUpdateForm,
             },
+            server::{ServerSettingCreateForm, ServerSettingUpdateForm},
             user::{SrpPasswordForm, UserAssoInitialForm},
         },
         po::{
             challenge::ChallengeCofig,
-            client::{ClientConfig, ClientIdpConfig},
+            client::{Client, ClientIdpConfig, ClientSetting},
+            server::{Server, ServerSetting},
             sms::SmsConfig,
             srp::SrpPassword,
             user::{User, UserAssociation},
@@ -39,19 +43,30 @@ use crate::{
         sms_config_controller::set_sms_config,
         challenge_config_controller::list_challenge_config,
         challenge_config_controller::set_challenge_config,
-        client_config_controller::create_client,
-        client_config_controller::client_config,
-        client_config_controller::set_client_config,
-        client_config_controller::client_specify_idp_config,
-        client_config_controller::client_all_idp_config,
-        client_config_controller::set_client_idp_config,
+        client_controller::create_client,
+        client_controller::list_clients,
+        client_controller::client_details,
+        client_controller::set_client_config,
+        client_controller::remove_client,
+        server_controller::server_detail,
+        server_controller::create_server,
+        server_controller::patch_server,
+        server_controller::remove_server,
+        idp_controller::client_specify_idp_config,
+        idp_controller::client_all_idp_config,
+        idp_controller::set_client_idp_config,
     ),
     components(schemas(
-        ClientConfigCreateForm,
-        ClientConfigUpdateForm,
+        ClientSettingCreateForm,
+        ServerSettingCreateForm,
+        ClientSettingUpdateForm,
+        ServerSettingUpdateForm,
         ClientIdpConfigSaveOrUpdateForm,
         SrpPasswordForm,
-        ClientConfig,
+        Client,
+        ClientSetting,
+        Server,
+        ServerSetting,
         ClientIdpConfig,
         SmsConfig,
         ChallengeCofig,
@@ -61,7 +76,8 @@ use crate::{
         SrpPassword,
         User,
         UserProfileDTO,
-        IdpType
+        IdpType,
+        ClientType
     ))
 )]
 pub struct ApiDoc;

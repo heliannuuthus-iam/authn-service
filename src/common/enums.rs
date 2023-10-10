@@ -22,7 +22,7 @@ pub enum IdpType {
     GitHub,
     Google,
     #[default]
-    Forum,
+    User,
 }
 
 impl sqlx::Type<sqlx::MySql> for IdpType {
@@ -44,7 +44,7 @@ impl FromStr for IdpType {
         } else if s == "google" {
             Ok(IdpType::Google)
         } else {
-            Ok(IdpType::Forum)
+            Ok(IdpType::User)
         }
     }
 }
@@ -56,7 +56,40 @@ impl From<String> for IdpType {
         } else if value == "google" {
             IdpType::Google
         } else {
-            IdpType::Forum
+            IdpType::User
+        }
+    }
+}
+
+#[derive(
+    Deserialize,
+    Serialize,
+    PartialEq,
+    Eq,
+    Debug,
+    Clone,
+    Copy,
+    Default,
+    ToSchema,
+    sqlx::Encode,
+    sqlx::Decode,
+)]
+#[sqlx(type_name = "client_type", rename_all = "lowercase")]
+#[serde(rename_all = "lowercase")]
+pub enum ClientType {
+    #[default]
+    #[sqlx(rename = "0")]
+    MTM, // machine to machine
+    #[sqlx(rename = "1")]
+    WEB, // singal page application and regular web application
+}
+
+impl From<i8> for ClientType {
+    fn from(value: i8) -> Self {
+        if value == 0 {
+            Self::MTM
+        } else {
+            Self::WEB
         }
     }
 }

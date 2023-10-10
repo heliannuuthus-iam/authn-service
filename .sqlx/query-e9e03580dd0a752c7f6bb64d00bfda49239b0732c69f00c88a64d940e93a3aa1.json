@@ -1,21 +1,21 @@
 {
   "db_name": "MySQL",
-  "query": "SELECT openid, idp_openid, idp_type, idp_extra FROM t_user_association WHERE idp_openid = ?",
+  "query": "SELECT idp_type, idp_client_id, idp_client_secret FROM t_client_idp_config WHERE client_id = ? and idp_type = ?",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
-        "name": "openid",
+        "name": "idp_type",
         "type_info": {
           "type": "VarString",
-          "flags": "NOT_NULL | MULTIPLE_KEY | NO_DEFAULT_VALUE",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
           "char_set": 224,
-          "max_size": 96
+          "max_size": 128
         }
       },
       {
         "ordinal": 1,
-        "name": "idp_openid",
+        "name": "idp_client_id",
         "type_info": {
           "type": "VarString",
           "flags": "NOT_NULL | NO_DEFAULT_VALUE",
@@ -25,34 +25,23 @@
       },
       {
         "ordinal": 2,
-        "name": "idp_type",
+        "name": "idp_client_secret",
         "type_info": {
           "type": "VarString",
           "flags": "NOT_NULL | NO_DEFAULT_VALUE",
           "char_set": 224,
-          "max_size": 64
-        }
-      },
-      {
-        "ordinal": 3,
-        "name": "idp_extra",
-        "type_info": {
-          "type": "Json",
-          "flags": "BLOB | BINARY",
-          "char_set": 63,
-          "max_size": 4294967295
+          "max_size": 16384
         }
       }
     ],
     "parameters": {
-      "Right": 1
+      "Right": 2
     },
     "nullable": [
       false,
       false,
-      false,
-      true
+      false
     ]
   },
-  "hash": "8252ca21db554bfa27dec83677d0aadbaffb6003ae74c95d51db2b00240d6753"
+  "hash": "e9e03580dd0a752c7f6bb64d00bfda49239b0732c69f00c88a64d940e93a3aa1"
 }

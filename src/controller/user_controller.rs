@@ -26,6 +26,6 @@ pub async fn user_profile(openid: Path<String>) -> Result<impl Responder> {
     info!("[查询用户信息]: {openid}");
     match user_service::get_user(&openid, true).await? {
         Some(u) => Ok(Json(u)),
-        None => Err(ServiceError::ReponseError(ErrorNotFound("user not fount"))),
+        None => Err(ServiceError::Reponse(ErrorNotFound("user not fount"))),
     }
 }
