@@ -30,7 +30,7 @@ lazy_static! {
 
 pub async fn acquire_conn() -> Result<PoolConnection<MySql>, ServiceError> {
     Ok(CONN.acquire().await.with_context(|| {
-        let msg = format!("acquire mysql connection failed");
+        let msg = "acquire mysql connection failed";
         tracing::error!(msg);
         msg
     })?)

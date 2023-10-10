@@ -1,5 +1,5 @@
 mod utils_test {
-    use forum_server::common::utils;
+    use ha_auth_server::common::utils;
 
     #[test]
     fn test_desensitize_email_username_le_4() {

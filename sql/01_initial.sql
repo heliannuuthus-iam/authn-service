@@ -7,7 +7,7 @@ VALUES (
   );
 INSERT INTO roles (username, role)
 VALUES ('nacos', 'ROLE_ADMIN');
-use forum;
+use auth;
 INSERT INTO `t_srp_password` (
     `identifier`,
     `verifier`,

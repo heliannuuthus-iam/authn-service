@@ -1,8 +1,8 @@
 use actix_web::{App, HttpServer};
 use common::config::env_var;
 use controller::{
-    challenge_config_controller, client_config_controller, password_controller,
-    sms_config_controller, user_association_controller, user_controller, ApiDoc,
+    challenge_config_controller, client_controller, idp_controller, password_controller,
+    server_controller, sms_config_controller, user_association_controller, user_controller, ApiDoc,
 };
 use dotenvy::dotenv;
 use tracing_actix_web::TracingLogger;
@@ -44,14 +44,19 @@ async fn main() -> std::io::Result<()> {
             .service(user_association_controller::create_user_and_init_idp_asso)
             .service(sms_config_controller::get_sms_config)
             .service(sms_config_controller::set_sms_config)
-            .service(challenge_config_controller::list_challenge_config)
             .service(challenge_config_controller::set_challenge_config)
-            .service(client_config_controller::create_client)
-            .service(client_config_controller::client_config)
-            .service(client_config_controller::set_client_config)
-            .service(client_config_controller::client_specify_idp_config)
-            .service(client_config_controller::client_all_idp_config)
-            .service(client_config_controller::set_client_idp_config)
+            .service(client_controller::create_client)
+            .service(client_controller::list_clients)
+            .service(client_controller::client_details)
+            .service(client_controller::set_client_config)
+            .service(client_controller::remove_client)
+            .service(server_controller::server_detail)
+            .service(server_controller::create_server)
+            .service(server_controller::patch_server)
+            .service(server_controller::remove_server)
+            .service(idp_controller::client_specify_idp_config)
+            .service(idp_controller::client_all_idp_config)
+            .service(idp_controller::set_client_idp_config)
     })
     .bind((
         env_var::<String>("SERVER_HOST"),

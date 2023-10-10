@@ -20,23 +20,23 @@ pub enum ConfigError {
 #[derive(Debug, Error)]
 pub enum ServiceError {
     #[error("{0}")]
-    ReponseError(#[from] actix_web::Error),
+    Reponse(#[from] actix_web::Error),
     #[error("an unspecified internal error occurred {0}")]
-    InternalError(#[from] anyhow::Error),
+    Internal(#[from] anyhow::Error),
     #[error("internal config error {0}")]
-    InternalConfigError(#[from] ConfigError),
+    InternalConfig(#[from] ConfigError),
 }
 
 impl ResponseError for ServiceError {
     fn status_code(&self) -> http::StatusCode {
         match self {
-            ServiceError::InternalError(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            ServiceError::InternalConfigError(e) => match e {
+            ServiceError::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            ServiceError::InternalConfig(e) => match e {
                 ConfigError::DataSource(_) => StatusCode::INTERNAL_SERVER_ERROR,
                 ConfigError::Reqwest(e) => e.status().unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
                 ConfigError::Redis(_) => StatusCode::INTERNAL_SERVER_ERROR,
             },
-            ServiceError::ReponseError(e) => e.as_response_error().status_code(),
+            ServiceError::Reponse(e) => e.as_response_error().status_code(),
         }
     }
 

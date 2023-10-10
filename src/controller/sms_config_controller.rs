@@ -24,7 +24,7 @@ pub async fn get_sms_config(template_id: Path<String>) -> Result<impl Responder>
     sms_config_repository::select_sms_config(&template_id)
         .await
         .and_then(|sms_config| {
-            sms_config.ok_or(ServiceError::ReponseError(actix_web::error::ErrorNotFound(
+            sms_config.ok_or(ServiceError::Reponse(actix_web::error::ErrorNotFound(
                 "sms_config not found",
             )))
         })
