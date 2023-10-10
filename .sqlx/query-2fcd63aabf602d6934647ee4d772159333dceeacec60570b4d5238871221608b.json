@@ -1,6 +1,6 @@
 {
   "db_name": "MySQL",
-  "query": "SELECT identifier, verifier, salt FROM t_srp_password where identifier = ?",
+  "query": "SELECT identifier, verifier, salt FROM t_srp_password WHERE identifier = ?",
   "describe": {
     "columns": [
       {
@@ -43,5 +43,5 @@
       false
     ]
   },
-  "hash": "c313c52b876587c681b77b64e4843edb379b1bd383eab86bcdb5ff9bda684795"
+  "hash": "2fcd63aabf602d6934647ee4d772159333dceeacec60570b4d5238871221608b"
 }

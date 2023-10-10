@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO t_server_setting(server_id, allow_offline_access, token_lifttime, signing_alg) VALUES(?, ?, ? ,?) ON DUPLICATE KEY UPDATE allow_offline_access = ?, token_lifttime = ?, signing_alg = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 7
+    },
+    "nullable": []
+  },
+  "hash": "ef354d173c109b958987ef7cdf04eee372b482ce0493d54e9368686a60d75007"
+}

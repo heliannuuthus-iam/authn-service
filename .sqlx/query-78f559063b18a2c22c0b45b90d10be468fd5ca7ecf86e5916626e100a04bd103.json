@@ -1,16 +1,16 @@
 {
   "db_name": "MySQL",
-  "query": "SELECT client_id, name, logo, description FROM t_client WHERE client_id = ?",
+  "query": "SELECT server_id, name, logo, description FROM t_server WHERE server_id = ?",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
-        "name": "client_id",
+        "name": "server_id",
         "type_info": {
           "type": "VarString",
           "flags": "NOT_NULL | UNIQUE_KEY | NO_DEFAULT_VALUE",
           "char_set": 224,
-          "max_size": 96
+          "max_size": 128
         }
       },
       {
@@ -54,5 +54,5 @@
       true
     ]
   },
-  "hash": "48b8a4ca0d26d43a44e656599fd41412dd8febc4c000964a924ed8593c142dcc"
+  "hash": "78f559063b18a2c22c0b45b90d10be468fd5ca7ecf86e5916626e100a04bd103"
 }
